@@ -91,7 +91,7 @@ namespace GameOnSystem {
     }
 
     internal class AppDbContext : DbContext {
-        private string format_version = "1";
+        private string format_version = "2";
 
         public DbSet<Option> Options { get; set; }
         public DbSet<Edition> Editions { get; set; }

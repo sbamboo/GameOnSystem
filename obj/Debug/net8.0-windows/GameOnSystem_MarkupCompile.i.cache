@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\csharp\GameOnSystem\obj\Debug\net8.0-windows\
+C:\Users\simon\Documents\GitHub\edu\unity\GameOnSystem\obj\Debug\net8.0-windows\
 GameOnSystem
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-C:\csharp\GameOnSystem\App.xaml
+C:\Users\simon\Documents\GitHub\edu\unity\GameOnSystem\App.xaml
 6-2118461965
 
 142018858629
-217-1581295589
+217640730883
 AdminView.xaml;LoginView.xaml;MainWindow.xaml;Styles.xaml;UserView.xaml;UserView_Group.xaml;
 
 False

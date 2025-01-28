@@ -28,7 +28,7 @@ namespace GameOnSystem {
         public UserView(MainWindow WindowInstance, UserControl? sendingView = null) {
             this.SendingView = sendingView;
             this.WindowInstance = WindowInstance;
-            this.Groups = this.WindowInstance.DbContext.GetGroups();
+            this.Groups = this.WindowInstance.DbContext.GetResolvedGroups();
             InitializeComponent();
             if (this.WindowInstance.Shared.user.IsAdmin == true) {
                 ChangeToAdminView.Visibility = Visibility.Visible;
@@ -56,7 +56,7 @@ namespace GameOnSystem {
                 // Create button
                 Button button = new Button {
                     Content = group.Name,
-                    Tag = group.Id,        // Store Id
+                    Tag = group.ID,        // Store Id
                     FontSize = 15,
                     Height = 25,
                     Margin = new Thickness(0, 0, 0, 5)
@@ -72,7 +72,7 @@ namespace GameOnSystem {
         private void GroupButton_Click(object sender, RoutedEventArgs e) {
             // Retrieve the button that was clicked
             if (sender is Button clickedButton && clickedButton.Tag is int clickedButtonTag) {
-                ResolvedGroup? group = this.Groups.FirstOrDefault(g => g.Id == clickedButtonTag);
+                ResolvedGroup? group = this.Groups.FirstOrDefault(g => g.ID == clickedButtonTag);
                 
                 if (group != null) {
                     //TitleTextBlock.Text = $"Clicked {group.Name} (tag={clickedButtonTag}; id={group.Id})";
