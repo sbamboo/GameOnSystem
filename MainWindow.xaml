@@ -1,0 +1,14 @@
+﻿<Window x:Class="GameOnSystem.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="GameOnSystem 0.0-alpha1" Width="1020" Height="550"
+        Style="{StaticResource WindowStyle}">
+        <!-- xmlns:usercontrols="clr-namespace:GameOnSystem" -->
+    <Grid>
+        <ContentControl x:Name="MainContent"></ContentControl>
+    </Grid>
+    <!-- <usercontrols:App></usercontrols:App> -->
+</Window>
