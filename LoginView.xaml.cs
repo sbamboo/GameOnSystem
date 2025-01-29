@@ -45,5 +45,11 @@ namespace GameOnSystem {
                 ResultInfo.Text = "Invalid email or password";
             }
         }
+
+        private void Login_InputField_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                LoginButton_Click(sender, e);
+            }
+        }
     }
 }

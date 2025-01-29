@@ -23,11 +23,11 @@
         <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,-2,0,0">
             <DockPanel Margin="0,0,0,5">
                 <TextBlock x:Name="Email_Label" Text="Email: " FontSize="15" Width="100" Height="25"/>
-                <TextBox x:Name="Email_InputField" Width="200" FontSize="14" Height="25"/>
+                <TextBox x:Name="Email_InputField" Width="200" FontSize="14" Height="25" KeyDown="Login_InputField_KeyDown"/>
             </DockPanel>
             <DockPanel Margin="0,0,0,10">
                 <TextBlock x:Name="Password_Label" Text="Password: " FontSize="15" Width="100" Height="25"/>
-                <PasswordBox x:Name="Password_InputField" Width="200" FontSize="14" Height="25"/>
+                <PasswordBox x:Name="Password_InputField" Width="200" FontSize="14" Height="25" KeyDown="Login_InputField_KeyDown"/>
             </DockPanel>
             <Button x:Name="LoginButton" Content="Login" Width="100" Height="25" Click="LoginButton_Click"/>
             <TextBlock x:Name="ResultInfo"></TextBlock>

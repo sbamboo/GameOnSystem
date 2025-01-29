@@ -61,4 +61,14 @@
         <Setter Property="Background" Value="#35353D"/>
     </Style>
 
+    <!-- AdminViewSegmentWrapper -->
+    <Style x:Key="AdminViewSegmentWrapper" TargetType="Border">
+        <Setter Property="Background" Value="#323232"/>
+        <Setter Property="BorderBrush" Value="#404040"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="7,2,7,7"/>
+        <Setter Property="CornerRadius" Value="13"/>
+        <Setter Property="Margin" Value="0,0,0,10"/>
+    </Style>
+
 </ResourceDictionary>

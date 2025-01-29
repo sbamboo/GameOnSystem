@@ -60,6 +60,7 @@ namespace GameOnSystem
 
                     DbContext.AddUser("User1", "user1@example.com", "user1", new List<int> { entertainment, physics_mathematics_implementation });
                     DbContext.AddUser("User2", "user2@example.com", "user2", new List<int> { code_structure_and_documentation, comment });
+
                     DbContext.AssembleGroup(
                         "Group 1",
                         "Game 1",
