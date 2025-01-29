@@ -45,6 +45,10 @@ namespace GameOnSystem {
             }
         }
 
+        private void UpdateGroups() {
+            this.Groups = this.WindowInstance.DbContext.GetResolvedGroups();
+        }
+
         private void UserView_Logout_Click(object sender, RoutedEventArgs e) {
             // The login view shall be reset on logout, thus we instantiate a new LoginView rathern then using senderView
             this.WindowInstance.Shared.user = null;
@@ -70,6 +74,7 @@ namespace GameOnSystem {
         }
 
         private void GroupButton_Click(object sender, RoutedEventArgs e) {
+            this.UpdateGroups();
             // Retrieve the button that was clicked
             if (sender is Button clickedButton && clickedButton.Tag is int clickedButtonTag) {
                 ResolvedGroup? group = this.Groups.FirstOrDefault(g => g.ID == clickedButtonTag);

@@ -56,4 +56,9 @@
         <Setter Property="Foreground" Value="#606060"/>
     </Style>
 
+    <!-- TotalGradeWrapper -->
+    <Style x:Key="TotalGradeWrapper" TargetType="Border">
+        <Setter Property="Background" Value="#35353D"/>
+    </Style>
+
 </ResourceDictionary>

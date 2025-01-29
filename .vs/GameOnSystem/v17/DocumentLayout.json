@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\userview_group.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:userview_group.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,16 +11,32 @@
       "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\styles.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:styles.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\userview_group.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:userview_group.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\userview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:userview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\userview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:userview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\loginview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:loginview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\adminview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:adminview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\loginview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:loginview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|c:\\users\\simon\\documents\\github\\edu\\unity\\gameonsystem\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6A71547-181C-4AD8-B2CA-DDADCA8366EB}|GameOnSystem.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,78 +54,114 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Styles.xaml",
+              "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\Styles.xaml",
+              "RelativeDocumentMoniker": "Styles.xaml",
+              "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\Styles.xaml",
+              "RelativeToolTip": "Styles.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-28T23:45:15.889Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "UserView.xaml",
+              "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView.xaml",
+              "RelativeDocumentMoniker": "UserView.xaml",
+              "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView.xaml",
+              "RelativeToolTip": "UserView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-28T23:41:56.005Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserView_Group.xaml",
+              "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView_Group.xaml",
+              "RelativeDocumentMoniker": "UserView_Group.xaml",
+              "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView_Group.xaml",
+              "RelativeToolTip": "UserView_Group.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-28T23:41:38.914Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "AdminView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\AdminView.xaml.cs",
               "RelativeDocumentMoniker": "AdminView.xaml.cs",
               "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\AdminView.xaml.cs",
               "RelativeToolTip": "AdminView.xaml.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABkAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T20:13:36.388Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "UserView_Group.xaml.cs",
               "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView_Group.xaml.cs",
               "RelativeDocumentMoniker": "UserView_Group.xaml.cs",
               "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView_Group.xaml.cs",
               "RelativeToolTip": "UserView_Group.xaml.cs",
-              "ViewState": "AgIAAJkAAAAAAAAAAAAwwLIAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAiwHgAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T19:58:59.517Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "AppDbContext.cs",
               "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\AppDbContext.cs",
               "RelativeDocumentMoniker": "AppDbContext.cs",
               "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\AppDbContext.cs",
               "RelativeToolTip": "AppDbContext.cs",
-              "ViewState": "AgIAAFgDAAAAAAAAAAA7wGkDAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAKcAAAAAAAAAAADwv6cAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T17:35:36.948Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "UserView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView.xaml.cs",
               "RelativeDocumentMoniker": "UserView.xaml.cs",
               "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\UserView.xaml.cs",
               "RelativeToolTip": "UserView.xaml.cs",
-              "ViewState": "AgIAAFYAAAAAAAAAAAAIwGoAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAACkAAAAAAAAAAAAYwC8AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T19:49:23.079Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "LoginView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\LoginView.xaml.cs",
               "RelativeDocumentMoniker": "LoginView.xaml.cs",
               "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\LoginView.xaml.cs",
               "RelativeToolTip": "LoginView.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T19:48:50.281Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAADwvz4AAAAuAQAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAAAAAAAiwDcAAABbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T17:30:10.551Z",
               "EditorCaption": ""

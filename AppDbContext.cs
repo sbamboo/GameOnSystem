@@ -179,7 +179,7 @@ namespace GameOnSystem {
             if (categoryType == "int_0-6") {
                 if (int.TryParse(value, out int intValue)) {
                     if (intValue < 0) {
-                        return (false, "int_0-6_Lågt");
+                        return (false, $"int_0-6_Lågt");
                     } else if (intValue > 6) {
                         return (false, "int_0-6_Högt");
                     }

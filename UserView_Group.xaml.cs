@@ -67,6 +67,12 @@ namespace GameOnSystem {
 
             UpdateGroupGradesView();
         }
+        private void UpdateGroups() {
+            if (this.resolvedGroup == null) {
+                return;
+            }
+            this.resolvedGroup = this.WindowInstance.DbContext.GetResolvedGroup(this.resolvedGroup.ID);
+        }
 
         private Border GetElementsForGroup(ResolvedGrade grade) {
             // Create a new Border
@@ -92,6 +98,15 @@ namespace GameOnSystem {
             TextBlock catValueInfoTextBlock;
             System.Windows.UIElement gradeTextBlock;
             if (grade.User.ID == WindowInstance.Shared.user.ID) {
+                // Get category info
+                string categoryType = grade.Category.CategoryType;
+                string categoryName = categoryType;
+                if (categoryType.Contains("int_")) {
+                    categoryName = categoryType.Replace("int_", "");
+                } else if (categoryType.Contains("string")) {
+                    categoryName = categoryType.Replace("string", "sträng");
+                }
+
                 categoryTextBlock = new TextBlock {
                     Text = grade.Category.Name + ":",
                     FontSize = 15,
@@ -99,16 +114,20 @@ namespace GameOnSystem {
                 };
 
                 // Add a TextBlock with the grade.Value
+                int input_width = 200;
+                if (categoryType.Contains("int")) { input_width = 30; }
                 gradeTextBlock = new TextBox {
                     Text = grade.Value.ToString(),
                     FontSize = 15,
+                    Width = input_width,
+                    TextAlignment = TextAlignment.Center,
                     Tag = $"GroupCatInput_{grade.ID}"
                 };
                 ((TextBox)gradeTextBlock).TextChanged += UpdateValueChanged;
 
                 // Add box to fill with warn
                 catValueInfoTextBlock = new TextBlock {
-                    Text = "(0-6)",
+                    Text = $"({categoryName})",
                     FontSize = 15,
                     Margin = new Thickness(10, 0, 0, 0),
                     Style = (Style)FindResource("GrayedOut"),
@@ -149,7 +168,7 @@ namespace GameOnSystem {
             }
 
             // Iterate resolvedGroup.Grades and for each place elements under GroupGameGradesWrapper
-            List<Category> existingCategories = new List<Category>();
+            List<int> existingCategories = new List<int>();
             GroupGameGradesWrapper.Children.Clear();
             foreach (var grade in resolvedGroup.Grades) {
 
@@ -157,14 +176,14 @@ namespace GameOnSystem {
 
                 GroupGameGradesWrapper.Children.Add(border);
 
-                existingCategories.Add(grade.Category);
+                existingCategories.Add(grade.Category.ID);
             }
 
             // Get all categories for the WindowInstance.Shared.user
             List<Category> userFocusCategories = WindowInstance.DbContext.GetCategoriesForUser(WindowInstance.Shared.user.ID);
             // Iterate userFocusCategories and for each if not exists in existingCategories add new to existingCategories
             foreach (var userFocusCategory in userFocusCategories) {
-                if (existingCategories.Contains(userFocusCategory) == false) {
+                if (existingCategories.Contains(userFocusCategory.ID) == false) {
                     string defaultValue = "";
                     if (userFocusCategory.CategoryType.Contains("int")) {
                         defaultValue = "0";
@@ -187,6 +206,8 @@ namespace GameOnSystem {
         }
 
         private void UpdateTotalGrade() {
+            UpdateGroups();
+
             // totalGrade is median of all grades
             var totalGrade = 0;
             if (resolvedGroup != null) {
@@ -211,7 +232,8 @@ namespace GameOnSystem {
                     CornerRadius = new CornerRadius(18),
                     Padding = new Thickness(15, 10, 15, 10),
                     Height = 42,
-                    Width = 300
+                    Width = 300,
+                    Style = (Style)FindResource("TotalGradeWrapper")
                 };
                 // Inside the border, create a StackPanel horizontal
                 var stackPanel = new StackPanel {
@@ -227,6 +249,7 @@ namespace GameOnSystem {
                 var gradeTextBlock = new TextBlock {
                     Text = totalGrade.ToString(),
                     FontSize = 15
+                    //Tag = "GroupCatInput_Total"
                 };
                 var calcNoticeTextBlock = new TextBlock {
                     Text = "(Medelvärde)",
@@ -243,6 +266,16 @@ namespace GameOnSystem {
             } else {
                 // else update the value
                 ((TextBlock)((StackPanel)totalGradeGolder.Child).Children[1]).Text = totalGrade.ToString();
+                /*
+                // else update the value
+                foreach (var child in ((StackPanel)totalGradeGolder.Child).Children) {
+                    if (child is TextBlock && (string)((TextBlock)child).Tag == "GroupCatInput_Total") {
+                        throw new Exception( ((TextBlock)child).Text + "   " + totalGrade.ToString() );
+                        ((TextBlock)child).Text = totalGrade.ToString();
+                        break;
+                    }
+                }
+                 */
             }
         }
 
@@ -291,8 +324,13 @@ namespace GameOnSystem {
                     categoryType = resolvedGrade.Category.CategoryType;
                 }
             }
+
             if (categoryType.Contains("int_")) {
                 categoryTypeName = categoryType.Replace("int_", "");
+            } else if (categoryType.Contains("string")) {
+                categoryTypeName = categoryType.Replace("string", "sträng");
+            } else {
+                categoryTypeName = categoryType;
             }
             var input_string = ((TextBox)sender).Text;
             if (infoBox != null) {
@@ -348,6 +386,8 @@ namespace GameOnSystem {
             } else {
                 infoBox.Text = $"Värde {categoryTypeName}! (dbset)";
             }
+
+            UpdateTotalGrade();
         }
 
         private void GroupGameOpenUrl(object sender, RoutedEventArgs e) {
