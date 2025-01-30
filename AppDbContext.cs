@@ -465,6 +465,31 @@ namespace GameOnSystem {
             }
             return categories;
         }
+        public bool AddCategoryForUser(int userId, int categoryId) {
+            UserCategory? userCategory = UserCategories.FirstOrDefault(uc => uc.UserID == userId && uc.CategoryID == categoryId);
+            if (userCategory == null) {
+                UserCategories.Add(new UserCategory { UserID = userId, CategoryID = categoryId });
+                this.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool RemoveCategoryForUser(int userId, int categoryId) {
+            UserCategory? userCategory = UserCategories.FirstOrDefault(uc => uc.UserID == userId && uc.CategoryID == categoryId);
+            if (userCategory != null) {
+                UserCategories.Remove(userCategory);
+                this.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool IsCategoryForUser(int userId, int categoryId) {
+            UserCategory? userCategory = UserCategories.FirstOrDefault(uc => uc.UserID == userId && uc.CategoryID == categoryId);
+            if (userCategory != null) {
+                return true;
+            }
+            return false;
+        }
         public int? AddUserCategory(int userId, int categoryId) {
             // Return id after creation, if exists just return id of existing entry
             UserCategory? userCategory = UserCategories.FirstOrDefault(uc => uc.UserID == userId && uc.CategoryID == categoryId);
@@ -844,6 +869,18 @@ namespace GameOnSystem {
         public List<ResolvedGroup> GetResolvedGroups() {
             List<ResolvedGroup> resolvedGroups = new List<ResolvedGroup>();
             List<Group> groups = Groups.ToList();
+            foreach (Group group in groups) {
+                ResolvedGroup? resolvedGroup = GetResolvedGroup(group.ID);
+                if (resolvedGroup != null) {
+                    resolvedGroups.Add(resolvedGroup);
+                }
+            }
+            return resolvedGroups;
+        }
+
+        public List<ResolvedGroup> GetResolvedGroupsForEdition(int editionId) {
+            List<ResolvedGroup> resolvedGroups = new List<ResolvedGroup>();
+            List<Group> groups = Groups.Where(g => g.EditionId == editionId).ToList();
             foreach (Group group in groups) {
                 ResolvedGroup? resolvedGroup = GetResolvedGroup(group.ID);
                 if (resolvedGroup != null) {

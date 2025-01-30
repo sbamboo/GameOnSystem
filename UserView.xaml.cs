@@ -28,12 +28,17 @@ namespace GameOnSystem {
         public UserView(MainWindow WindowInstance, UserControl? sendingView = null) {
             this.SendingView = sendingView;
             this.WindowInstance = WindowInstance;
-            this.Groups = this.WindowInstance.DbContext.GetResolvedGroups();
+            this.WindowInstance.Shared.userView = this;
+
             InitializeComponent();
+
+            GenerateUserView();
+        }
+
+        public void GenerateUserView() {
             if (this.WindowInstance.Shared.user.IsAdmin == true) {
                 ChangeToAdminView.Visibility = Visibility.Visible;
             }
-            GenerateGroupButtons();
 
             List<Edition>? editions = this.WindowInstance.DbContext.GetActiveEdtions();
             if (editions != null) {
@@ -41,8 +46,22 @@ namespace GameOnSystem {
                 if (editions.Count > 0) {
                     Edition edition = editions[0];
                     TitleTextBlock.Text = $"{edition.Name} (Tema: {edition.Theme})";
+                    if (GroupClickMessage != null) {
+                        GroupClickMessage.Text = "Click a group on the side to view it.";
+                    }
+
+                    this.Groups = this.WindowInstance.DbContext.GetResolvedGroupsForEdition(edition.ID);
+                } else {
+                    this.Groups = new List<ResolvedGroup>();
+                    TitleTextBlock.Text = "Inga aktiva utgåvor";
+                    GroupSelectionTitle.Text = "";
+                    if (GroupClickMessage != null) {
+                        GroupClickMessage.Text = "Inga aktiva utgåvor, kontakta en administratör.";
+                    }
                 }
             }
+
+            GenerateGroupButtons();
         }
 
         private void UpdateGroups() {
@@ -56,6 +75,7 @@ namespace GameOnSystem {
         }
 
         private void GenerateGroupButtons() {
+            GroupSelectionsWrapper.Children.Clear();
             foreach (var group in this.Groups) {
                 // Create button
                 Button button = new Button {

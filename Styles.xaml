@@ -71,4 +71,12 @@
         <Setter Property="Margin" Value="0,0,0,10"/>
     </Style>
 
+    <!-- AdminViewInfo -->
+    <Style x:Key="AdminViewInfo_Green" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="LimeGreen"/>
+    </Style>
+    <Style x:Key="AdminViewInfo_Red" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Red"/>
+    </Style>
+
 </ResourceDictionary>

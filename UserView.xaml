@@ -37,14 +37,14 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,0,10,0">
-                <TextBlock Text="Select Group" FontSize="20"></TextBlock>
+                <TextBlock Name="GroupSelectionTitle" Text="Select Group" FontSize="20"></TextBlock>
                 <StackPanel x:Name="GroupSelectionsWrapper" Orientation="Vertical"/>
             </StackPanel>
 
             <Border Grid.Column="1" Background="#606060"></Border>
 
             <StackPanel Name="PerGroupContentHolder" Grid.Column="2" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Stretch">
-                <TextBlock Text="Click a group on the side to view it." FontSize="15" Width="Auto" TextAlignment="Center" Margin="0,40,0,0" Style="{StaticResource GrayedOut}"/>
+                <TextBlock Name="GroupClickMessage" Text="Click a group on the side to view it." FontSize="15" Width="Auto" TextAlignment="Center" Margin="0,40,0,0" Style="{StaticResource GrayedOut}"/>
             </StackPanel>
         </Grid>
 

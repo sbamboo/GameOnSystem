@@ -41,7 +41,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="Utgåvor" FontSize="20" Padding="0,0,0,5"></TextBlock>
                             <Border Grid.Row="1" Background="#454545" CornerRadius="2"></Border>
-                            <ContentControl Grid.Row="2" x:Name="AdminSegment_Edition"></ContentControl>
+                            <ContentControl Grid.Row="2" x:Name="AdminSegment_Editions" Margin="0,5,0,0"></ContentControl>
                         </Grid>
                     </Border>
 
@@ -54,7 +54,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="Kategorier" FontSize="20" Padding="0,0,0,5"></TextBlock>
                             <Border Grid.Row="1" Background="#454545" CornerRadius="2"></Border>
-                            <ContentControl Grid.Row="2" Name="AdminSegment_Category"></ContentControl>
+                            <ContentControl Grid.Row="2" Name="AdminSegment_Categories" Margin="0,5,0,0"></ContentControl>
                         </Grid>
                     </Border>
 
@@ -65,9 +65,9 @@
                                 <RowDefinition Height="2"></RowDefinition>
                                 <RowDefinition Height="*"></RowDefinition>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="Användare" FontSize="20" Padding="0,0,0,5"></TextBlock>
+                            <TextBlock Grid.Row="0" Text="Lärare" FontSize="20" Padding="0,0,0,5"></TextBlock>
                             <Border Grid.Row="1" Background="#454545" CornerRadius="2"></Border>
-                            <ContentControl Grid.Row="2" Name="AdminSegment_Users"></ContentControl>
+                            <ContentControl Grid.Row="2" Name="AdminSegment_Users" Margin="0,5,0,0"></ContentControl>
                         </Grid>
                     </Border>
 
@@ -79,8 +79,8 @@
                                 <RowDefinition Height="*"></RowDefinition>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="Grupper" FontSize="20" Padding="0,0,0,5"></TextBlock>
-                            <Border Grid.Row="1" Background="#454545" CornerRadius="2"></Border>
-                            <ContentControl Grid.Row="2" Name="AdminSegment_Groups"></ContentControl>
+                            <Border Grid.Row="1" Background="#454545" CornerRadius="2" ></Border>
+                            <ContentControl Grid.Row="2" Name="AdminSegment_Groups" Margin="0,5,0,0"></ContentControl>
                         </Grid>
                     </Border>
                 </StackPanel>

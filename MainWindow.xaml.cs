@@ -16,6 +16,7 @@ namespace GameOnSystem
 
     class Shared {
         public User user;
+        public UserView? userView;
     }
 
     /// <summary>
