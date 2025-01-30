@@ -84,11 +84,11 @@ namespace GameOnSystem {
             TextBlock isActiveTextBlock = new TextBlock() {
                 Text = "Aktiv: "
             };
-            CheckBox isActiveCheckBox = new CheckBox() {
-                IsChecked = this.Edition.IsActive,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "IsActive"
-            };
+                CheckBox isActiveCheckBox = new CheckBox() {
+                    IsChecked = this.Edition.IsActive,
+                    Margin = new Thickness(0, 0, 10, 0),
+                    Tag = "IsActive"
+                };
 
             Button saveButton = new Button() {
                 Content = "Save",
@@ -496,6 +496,57 @@ namespace GameOnSystem {
                 Tag = "InnerStackPanel"
             };
 
+                // FocusCategories
+                StackPanel focusCategoriesOuterOuterWrapper = new StackPanel() {
+                    Orientation = Orientation.Horizontal,
+                    Margin = new Thickness(0, 0, 0, 10),
+                    Tag = "FocusCategoriesOuterOuterWrapper"
+                };
+
+                    TextBlock focusCategoriesOuterTitle = new TextBlock() {
+                        Text = "FocusCategories: ",
+                        Margin = new Thickness(30, 0, 10, 0),
+                        Tag = "FocusCategoriesOuterTitle"
+                    };
+
+                        StackPanel focusCategoriesOuterWrapper = new StackPanel() {
+                            Orientation = Orientation.Vertical,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "FocusCategoriesOuterWrapper"
+                        };
+
+                            StackPanel focusCategoriesExisting = new StackPanel() {
+                                Orientation = Orientation.Vertical,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = "FocusCategoriesExisting"
+                            };
+
+                            StackPanel focusCategoriesNew = new StackPanel() {
+                                Orientation = Orientation.Horizontal,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = "FocusCategoriesNew"
+                            };
+
+                            TextBox focusCategoriesNewCatId = new TextBox() {
+                                Width = 20,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = "FocusCategoriesNewCatId"
+                            };
+
+                            Button focusCategoriesNewAddButton = new Button() {
+                                Content = "Add",
+                                Width = 30,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = tags
+                            };
+                            focusCategoriesNewAddButton.Click += this.FocusCategoryaddCatEvent;
+
+                    TextBlock focusCategoriesInfoTextBlock = new TextBlock() {
+                        Text = "(Categories are saved on change)",
+                        Tag = "FocusCategoriesInfo",
+                        Style = (Style)Application.Current.Resources["GrayedOut"]
+                    };
+
             TextBlock idTextBlock = new TextBlock() {
                 Text = this.User.ID.ToString(),
                 Margin = new Thickness(0, 0, 10, 0),
@@ -560,57 +611,6 @@ namespace GameOnSystem {
                 Tag = "Info"
             };
 
-            // FocusCategories
-            StackPanel focusCategoriesOuterOuterWrapper = new StackPanel() {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 0, 0, 10),
-                Tag = "FocusCategoriesOuterOuterWrapper"
-            };
-
-            TextBlock focusCategoriesOuterTitle = new TextBlock() {
-                Text = "FocusCategories: ",
-                Margin = new Thickness(30, 0, 10, 0),
-                Tag = "FocusCategoriesOuterTitle"
-            };
-
-            StackPanel focusCategoriesOuterWrapper = new StackPanel() {
-                Orientation = Orientation.Vertical,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "FocusCategoriesOuterWrapper"
-            };
-
-            StackPanel focusCategoriesExisting = new StackPanel() {
-                Orientation = Orientation.Vertical,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "FocusCategoriesExisting"
-            };
-
-            StackPanel focusCategoriesNew = new StackPanel() {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "FocusCategoriesNew"
-            };
-
-            TextBox focusCategoriesNewCatId = new TextBox() {
-                Width = 20,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "FocusCategoriesNewCatId"
-            };
-
-            Button focusCategoriesNewAddButton = new Button() {
-                Content = "Add",
-                Width = 30,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = tags
-            };
-            focusCategoriesNewAddButton.Click += this.FocusCategoryaddCatEvent;
-
-            TextBlock focusCategoriesInfoTextBlock = new TextBlock() {
-                Text = "(Categories are saved on change)",
-                Tag = "FocusCategoriesInfo",
-                Style = (Style)Application.Current.Resources["GrayedOut"]
-            };
-
             this.InfoTextBlock = infoTextBlock;
 
             this.FocusCategoriesExisting = focusCategoriesExisting;
@@ -660,8 +660,6 @@ namespace GameOnSystem {
                 if (this.InfoTextBlock != null) { this.InfoTextBlock.Text = ""; }
                 this.MarkInfoTextNeutral();
                 this.UpdateData();
-
-                this.UpdateFocusCategories();
 
                 // Get parent of the sender
                 StackPanel parent = (StackPanel)((Button)sender).Parent;
@@ -790,7 +788,6 @@ namespace GameOnSystem {
         }
 
         private void FocusCategoryaddCatEvent(object sender, RoutedEventArgs e) {
-            // Update the textboxes
             List<object> tags = (List<object>)((Button)sender).Tag;
             object senderType = tags[0];
             int senderId = (int)tags[1];
@@ -862,6 +859,10 @@ namespace GameOnSystem {
         private StackPanel Parent;
         private StackPanel? UiElementIntance = null;
         private TextBlock? InfoTextBlock = null;
+
+        private StackPanel? GroupMembersExistingWrapper = null;
+        private StackPanel? GroupGradesExistingWrapper = null;
+
         internal void MarkInfoTextError() {
             if (this.InfoTextBlock != null) {
                 // AdminViewInfo_Red style static resource, get resource in App.xaml where we have <ResourceDictionary Source="Styles.xaml"/>
@@ -897,9 +898,9 @@ namespace GameOnSystem {
             //StackPanel: ID |Name| |GameName| |EditionId| [Save] [Refresh] [Delete]
             //               |GameUrl|
             //               |GameBannerUrl|
-            //               Members: |...| [-]   |...| [-] (Members are saved on change)
-            //                        |...| [Add]
-            //               Grades:  |Value| |UserId| |CategoryId| [-]   (Grades are saved on change)
+            //               Members: |Name| [Save] [-] (Members are saved on change)
+            //                        |Name| [Add]
+            //               Grades:  |Value| |UserId| |CategoryId| [Save] [-]   (Grades are saved on change)
             //                        |Value| |UserId| |CategoryId| [Add]
 
             StackPanel stackPanel = new StackPanel() {
@@ -946,73 +947,131 @@ namespace GameOnSystem {
                 Margin = new Thickness(0, 0, 10, 0),
                 Tag = "LowerFieldsWrapper",
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Width = 460
+                Width = 550
             };
 
-            TextBox gameUrlTextBox = new TextBox() {
-                Text = this.Group.GameUrl,
-                Width = 300,
-                Tag = "GameUrl",
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
+                TextBox gameUrlTextBox = new TextBox() {
+                    Text = this.Group.GameUrl,
+                    Width = 300,
+                    Tag = "GameUrl",
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
 
-            TextBox gameBannerUrlTextBox = new TextBox() {
-                Text = this.Group.GameBannerUrl,
-                Width = 300,
-                Tag = "GameBannerUrl",
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 0, 0, 10),
-            };
+                TextBox gameBannerUrlTextBox = new TextBox() {
+                    Text = this.Group.GameBannerUrl,
+                    Width = 300,
+                    Tag = "GameBannerUrl",
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 10),
+                };
 
-            StackPanel membersSegmentWrapper = new StackPanel() {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 0, 0, 10),
-                Tag = "MembersSegmentWrapper",
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
+                StackPanel membersSegmentWrapper = new StackPanel() {
+                    Orientation = Orientation.Horizontal,
+                    Margin = new Thickness(0, 0, 0, 10),
+                    Tag = "MembersSegmentWrapper",
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
 
-            TextBlock membersSegmentTitle = new TextBlock() {
-                Text = "Members: ",
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "MembersSegmentTitle"
-            };
+                    TextBlock membersSegmentTitle = new TextBlock() {
+                        Text = "Members: ",
+                        Margin = new Thickness(0, 0, 10, 0),
+                        Tag = "MembersSegmentTitle"
+                    };
 
-            StackPanel membersSegmentInnerWrapper = new StackPanel() {
-                Orientation = Orientation.Vertical,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "MembersSegmentInnerWrapper"
-            };
+                    StackPanel membersSegmentInnerWrapper = new StackPanel() {
+                        Orientation = Orientation.Vertical,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        Tag = "MembersSegmentInnerWrapper"
+                    };
 
-            TextBlock membersSegmentInfo = new TextBlock() {
-                Text = "(Members are saved on change)",
-                Tag = "MembersSegmentInfo",
-                Style = (Style)Application.Current.Resources["GrayedOut"]
-            };
+                        StackPanel membersSegmentExisting = new StackPanel() {
+                            Orientation = Orientation.Vertical,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "MembersSegmentExisting"
+                        };
 
-            StackPanel gradesSegmentWrapper = new StackPanel() {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 0, 0, 10),
-                Tag = "GradesSegmentWrapper",
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
+                        StackPanel membersSegmentNew = new StackPanel() {
+                            Orientation = Orientation.Horizontal,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "MembersSegmentNew"
+                        };
 
-            TextBlock gradesSegmentTitle = new TextBlock() {
-                Text = "Grades: ",
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "GradesSegmentTitle"
-            };
+                            TextBox membersSegmentNewGroupMemberName = new TextBox() {
+                                Width = 150,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = "MembersSegmentNewGroupMemberName"
+                            };
 
-            StackPanel groupSegmentInnerWrapper = new StackPanel() {
-                Orientation = Orientation.Vertical,
-                Margin = new Thickness(0, 0, 10, 0),
-                Tag = "GroupSegmentInnerWrapper"
-            };
+                            Button membersSegmentNewAddButton = new Button() {
+                                Content = "Add",
+                                Width = 30,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = tags
+                            };
 
-            TextBlock gradesSegmentInfo = new TextBlock() {
-                Text = "(Grades are saved on change)",
-                Tag = "GradesSegmentInfo",
-                Style = (Style)Application.Current.Resources["GrayedOut"]
-            };
+                        TextBlock membersSegmentInfo = new TextBlock() {
+                            Text = "(Members are saved on change)",
+                            Tag = "MembersSegmentInfo",
+                            Style = (Style)Application.Current.Resources["GrayedOut"]
+                        };
+
+                StackPanel gradesSegmentWrapper = new StackPanel() {
+                    Orientation = Orientation.Horizontal,
+                    Margin = new Thickness(0, 0, 0, 10),
+                    Tag = "GradesSegmentWrapper",
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+
+                    TextBlock gradesSegmentTitle = new TextBlock() {
+                        Text = "Grades: ",
+                        Margin = new Thickness(0, 0, 10, 0),
+                        Tag = "GradesSegmentTitle"
+                    };
+
+                    StackPanel gradesSegmentInnerWrapper = new StackPanel() {
+                        Orientation = Orientation.Vertical,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        Tag = "GradesSegmentInnerWrapper"
+                    };
+
+                        StackPanel gradesSegmentExisting = new StackPanel() {
+                            Orientation = Orientation.Vertical,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "GradesSegmentExisting"
+                        };
+
+                        StackPanel groupSegmentNew = new StackPanel() {
+                            Orientation = Orientation.Horizontal,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "GroupSegmentNew"
+                        };
+
+                        TextBox groupSegmentNewValue = new TextBox() {
+                            Width = 40,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "GroupSegmentNewValue"
+                        };
+                            TextBox groupSegmentNewUserId = new TextBox() {
+                                Width = 20,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = "GroupSegmentNewUserId"
+                            };
+                            TextBox groupSegmentNewCategoryId = new TextBox() {
+                                Width = 20,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                Tag = "GroupSegmentNewCategoryId"
+                            };
+                            Button groupSegmentNewAddButton = new Button() {
+                                Content = "Add",
+                                Width = 30,
+                                Tag = tags
+                            };
+
+                    TextBlock gradesSegmentInfo = new TextBlock() {
+                        Text = "(Grades are saved on change)",
+                        Tag = "GradesSegmentInfo",
+                        Style = (Style)Application.Current.Resources["GrayedOut"]
+                    };
 
             Button saveButton = new Button() {
                 Content = "Save",
@@ -1042,6 +1101,8 @@ namespace GameOnSystem {
             };
 
             this.InfoTextBlock = infoTextBlock;
+            this.GroupMembersExistingWrapper = membersSegmentExisting;
+            this.GroupGradesExistingWrapper = gradesSegmentExisting;
 
             innerStackPanel.Children.Add(idTextBlock);
             innerStackPanel.Children.Add(nameTextBox);
@@ -1057,12 +1118,22 @@ namespace GameOnSystem {
                 lowerFieldsWrapper.Children.Add(gameBannerUrlTextBox);
 
                     membersSegmentWrapper.Children.Add(membersSegmentTitle);
+                        membersSegmentInnerWrapper.Children.Add(membersSegmentExisting);
+                            membersSegmentNew.Children.Add(membersSegmentNewGroupMemberName);
+                            membersSegmentNew.Children.Add(membersSegmentNewAddButton);
+                        membersSegmentInnerWrapper.Children.Add(membersSegmentNew);
                     membersSegmentWrapper.Children.Add(membersSegmentInnerWrapper);
                     membersSegmentWrapper.Children.Add(membersSegmentInfo);
                 lowerFieldsWrapper.Children.Add(membersSegmentWrapper);
 
                     gradesSegmentWrapper.Children.Add(gradesSegmentTitle);
-                    gradesSegmentWrapper.Children.Add(groupSegmentInnerWrapper);
+                        gradesSegmentInnerWrapper.Children.Add(gradesSegmentExisting);
+                            groupSegmentNew.Children.Add(groupSegmentNewValue);
+                            groupSegmentNew.Children.Add(groupSegmentNewUserId);
+                            groupSegmentNew.Children.Add(groupSegmentNewCategoryId);
+                            groupSegmentNew.Children.Add(groupSegmentNewAddButton);
+                        gradesSegmentInnerWrapper.Children.Add(groupSegmentNew);
+                    gradesSegmentWrapper.Children.Add(gradesSegmentInnerWrapper);
                     gradesSegmentWrapper.Children.Add(gradesSegmentInfo);   
                 lowerFieldsWrapper.Children.Add(gradesSegmentWrapper);
 
@@ -1071,34 +1142,54 @@ namespace GameOnSystem {
             this.UiElementIntance = stackPanel;
 
             this.Parent.Children.Add(stackPanel);
+
+            this.UpdateGroupMembersSegment();
+            this.UpdateGroupGradesSegment();
         }
 
         private void Refresh(object sender, RoutedEventArgs e) {
             // Update the textboxes
             List<object> tags = (List<object>)((Button)sender).Tag;
-            object senderType = tags[0];
+            Type senderType = (Type)tags[0];
             int senderId = (int)tags[1];
 
-            if (senderType == Group && senderId == this.Group.ID) {
+            if (senderType == typeof(ResolvedGroup) && senderId == this.Group.ID) {
                 if (this.InfoTextBlock != null) { this.InfoTextBlock.Text = ""; }
                 this.MarkInfoTextNeutral();
                 this.UpdateData();
+
                 // Get parent of the sender
                 StackPanel parent = (StackPanel)((Button)sender).Parent;
                 // Update the textboxes
                 foreach (var child in parent.Children) {
                     if (child is TextBox textBox) {
+                        if ((string)textBox.Tag == "ID") {
+                            textBox.Text = this.Group.ID.ToString();
+                        } else if ((string)textBox.Tag == "Name") {
+                            textBox.Text = this.Group.Name;
+                        } else if ((string)textBox.Tag == "GameName") {
+                            textBox.Text = this.Group.GameName;
+                        } else if ((string)textBox.Tag == "EditionId") {
+                            textBox.Text = this.Group.Edition.ID.ToString();
+                        } else if ((string)textBox.Tag == "GameUrl") {
+                            textBox.Text = this.Group.GameUrl;
+                        } else if ((string)textBox.Tag == "GameBannerUrl") {
+                            textBox.Text = this.Group.GameBannerUrl;
+                        }
                     }
                 }
+
+                this.UpdateGroupMembersSegment();
+                this.UpdateGroupGradesSegment();
             }
         }
         private void Save(object sender, RoutedEventArgs e) {
             // Update the textboxes
             List<object> tags = (List<object>)((Button)sender).Tag;
-            object senderType = tags[0];
+            Type senderType = (Type)tags[0];
             int senderId = (int)tags[1];
 
-            if (senderType == Group && senderId == this.Group.ID) {
+            if (senderType == typeof(ResolvedGroup) && senderId == this.Group.ID) {
                 // Get the parent of the sender
                 StackPanel parent = (StackPanel)((Button)sender).Parent;
                 // Get the values of the textboxes into a Editon instance
@@ -1114,11 +1205,11 @@ namespace GameOnSystem {
         private void Delete(object sender, RoutedEventArgs e) {
             // Update the textboxes
             List<object> tags = (List<object>)((Button)sender).Tag;
-            object senderType = tags[0];
+            Type senderType = (Type)tags[0];
             int senderId = (int)tags[1];
 
-            if (senderType == Group && senderId == this.Group.ID) {
-                bool success = this.WindowInstance.DbContext.RemoveGroup(this.Group.ID);
+            if (senderType == typeof(ResolvedGroup) && senderId == this.Group.ID) {
+                bool success = this.WindowInstance.DbContext.RemoveGroupAndLinkedEntries(this.Group.ID);
                 if (success == false) {
                     if (this.InfoTextBlock != null) {
                         this.InfoTextBlock.Text = "Failed to delete!";
@@ -1137,6 +1228,183 @@ namespace GameOnSystem {
                 }
             }
         }
+
+        private void UpdateGroupMembersSegment() {
+            if (this.GroupMembersExistingWrapper != null) {
+                this.GroupMembersExistingWrapper.Children.Clear();
+
+                this.UpdateData();
+
+                List<GroupMember> groupMembers = this.Group.GroupMembers;
+                foreach (var groupMember in groupMembers) {
+                    // |...| [-]
+                    StackPanel groupMemberWrapper = new StackPanel() {
+                        Orientation = Orientation.Horizontal,
+                        Tag = $"groupmember_{groupMember.ID}"
+                    };
+
+                        TextBlock groupMemberId = new TextBlock() {
+                            Text = groupMember.ID.ToString(),
+                            Width = 30,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "GroupMemberId",
+                            //Style = (Style)Application.Current.Resources["GrayedOut"]
+                        };
+
+                        TextBlock groupMemberName = new TextBlock() {
+                            Text = groupMember.Name,
+                            Width = 150,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            Tag = "GroupMemberName",
+                            //Style = (Style)Application.Current.Resources["GrayedOut"]
+                        };
+
+                        Button groupMemberRemButton = new Button() {
+                            Content = "-",
+                            Width = 20,
+                            Tag = groupMember.ID
+                        };
+                        groupMemberRemButton.Click += this.GroupMemberRemMemberEvent;
+
+                    groupMemberWrapper.Children.Add(groupMemberId);
+                    groupMemberWrapper.Children.Add(groupMemberName);
+                    groupMemberWrapper.Children.Add(groupMemberRemButton);
+                    this.GroupMembersExistingWrapper.Children.Add(groupMemberWrapper);
+                }
+            }
+        }
+        private void GroupMemberRemMemberEvent(object sender, RoutedEventArgs e) {
+            // Check so parent of sender is StackPanel with tag begining with "groupmember_"
+            if (((Button)sender).Parent is StackPanel) {
+                // Check starts with "groupmember_"
+                if (((string)((StackPanel)((Button)sender).Parent).Tag).StartsWith("groupmember_")) {
+                    if (((Button)sender).Tag is int) {
+                        int groupMemberId = (int)((Button)sender).Tag;
+                        bool success = WindowInstance.DbContext.RemoveGroupMemberEntry(groupMemberId);
+                        if (success) {
+                            if (this.InfoTextBlock != null) {
+                                this.InfoTextBlock.Text = "Group member removed!";
+                                this.MarkInfoTextSuccess();
+                            }
+                        } else {
+                            if (this.InfoTextBlock != null) {
+                                this.InfoTextBlock.Text = "Failed to remove group member!";
+                                this.MarkInfoTextError();
+                            }
+                        }
+                        this.UpdateGroupMembersSegment();
+                    }
+                }
+            }
+        }
+        private void GroupMemberAddMemberEvent(object sender, RoutedEventArgs e) {
+            List<object> tags = (List<object>)((Button)sender).Tag;
+            Type senderType = (Type)tags[0];
+            int senderId = (int)tags[1];
+
+            if (senderType == typeof(ResolvedGroup) && senderId == this.Group.ID) {
+                int groupMemberId = -1;
+                string groupMemberName = "";
+                // Get sibling that is TextBox
+                foreach (UIElement child in ((StackPanel)((Button)sender).Parent).Children) {
+                    if (child is TextBox) {
+                        if ((string)((TextBox)child).Tag == "MembersSegmentNewGroupMemberId") {
+                            try {
+                                groupMemberId = int.Parse(((TextBox)child).Text);
+                            } catch {
+                                if (this.InfoTextBlock != null) {
+                                    this.InfoTextBlock.Text = "Group member ID must be a number!";
+                                    this.MarkInfoTextError();
+                                }
+                            }
+                        } else if ((string)((TextBox)child).Tag == "MembersSegmentNewGroupMemberName") {
+                            groupMemberName = ((TextBox)child).Text;
+                        }
+                    }
+                }
+
+                // Add group member then UpdateGroupMembersSegment()
+            }
+        }
+
+        private void UpdateGroupGradesSegment() {
+            if (this.GroupGradesExistingWrapper != null) {
+                this.GroupGradesExistingWrapper.Children.Clear();
+
+                this.UpdateData();
+
+                List<ResolvedGrade> groupGrades = this.Group.Grades;
+                foreach (var groupGrade in groupGrades) {
+                    // |...| [-]
+                    StackPanel groupGradeWrapper = new StackPanel() {
+                        Orientation = Orientation.Horizontal,
+                        Tag = $"groupgrade_{groupGrade.ID}"
+                    };
+
+                    TextBlock groupGradeValue = new TextBlock() {
+                        Text = groupGrade.Value.ToString(),
+                        Width = 30,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        Tag = "GroupGradeValue",
+                        //Style = (Style)Application.Current.Resources["GrayedOut"]
+                    };
+
+                    TextBlock groupGradeUserId = new TextBlock() {
+                        Text = groupGrade.User.ID.ToString(),
+                        Width = 20,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        Tag = "GroupGradeUserId",
+                        //Style = (Style)Application.Current.Resources["GrayedOut"]
+                    };
+
+                    TextBlock groupGradeCategoryId = new TextBlock() {
+                        Text = groupGrade.Category.ID.ToString(),
+                        Width = 20,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        Tag = "GroupGradeCategoryId",
+                        //Style = (Style)Application.Current.Resources["GrayedOut"]
+                    };
+
+                    Button groupGradeRemButton = new Button() {
+                        Content = "-",
+                        Width = 20,
+                        Tag = groupGrade.ID
+                    };
+                    groupGradeRemButton.Click += this.GroupGradeRemGradeEvent;
+
+                    groupGradeWrapper.Children.Add(groupGradeValue);
+                    groupGradeWrapper.Children.Add(groupGradeUserId);
+                    groupGradeWrapper.Children.Add(groupGradeCategoryId);
+                    groupGradeWrapper.Children.Add(groupGradeRemButton);
+                    this.GroupGradesExistingWrapper.Children.Add(groupGradeWrapper);
+                }
+            }
+        }
+        private void GroupGradeRemGradeEvent(object sender, RoutedEventArgs e) {
+            // Check so parent of sender is StackPanel with tag begining with "groupgrade_"
+            if (((Button)sender).Parent is StackPanel) {
+                // Check starts with "groupgrade_"
+                if (((string)((StackPanel)((Button)sender).Parent).Tag).StartsWith("groupgrade_")) {
+                    if (((Button)sender).Tag is int) {
+                        int groupGradeId = (int)((Button)sender).Tag;
+                        bool success = WindowInstance.DbContext.RemoveGrade(groupGradeId);
+                        if (success) {
+                            if (this.InfoTextBlock != null) {
+                                this.InfoTextBlock.Text = "Group grade removed!";
+                                this.MarkInfoTextSuccess();
+                            }
+                        } else {
+                            if (this.InfoTextBlock != null) {
+                                this.InfoTextBlock.Text = "Failed to remove group grade!";
+                                this.MarkInfoTextError();
+                            }
+                        }
+                        this.UpdateGroupGradesSegment();
+                    }
+                }
+            }
+        }
+        private void GroupGradeAddGradeEvent(object sender, RoutedEventArgs e) { }
     }
 
     /// <summary>

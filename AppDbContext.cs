@@ -890,6 +890,28 @@ namespace GameOnSystem {
             return resolvedGroups;
         }
 
+        public bool RemoveGroupAndLinkedEntries(int id) {
+            Group? group = Groups.FirstOrDefault(g => g.ID == id);
+            if (group == null) {
+                return false;
+            }
+            // Remove the GroupMember entries for the group
+            List<GroupMember> groupMembers = GroupMembers.Where(gm => gm.GroupId == group.ID).ToList();
+            foreach (GroupMember gm in groupMembers) {
+                GroupMembers.Remove(gm);
+            }
+            // Remove the Grade entries for the group
+            List<Grade> grades = Grades.Where(g => g.GroupId == group.ID).ToList();
+            foreach (Grade g in grades) {
+                Grades.Remove(g);
+            }
+            // Remove the Group entry
+            Groups.Remove(group);
+
+            this.SaveChanges();
+            return true;
+        }
+
         // Grade
         public Grade? GetGrade(int id) {
             return Grades.FirstOrDefault(g => g.ID == id);
@@ -971,6 +993,35 @@ namespace GameOnSystem {
                 }
             }
             return null;
+        }
+        public bool RemoveGrade(int id) {
+            Grade? grade = Grades.FirstOrDefault(g => g.ID == id);
+            if (grade != null) {
+                Grades.Remove(grade);
+                this.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        // GroupMembers
+        public bool AddGroupMemberEntry(int groupId, string name) {
+            GroupMember? groupMember = GroupMembers.FirstOrDefault(gm => gm.Name == name && gm.GroupId == groupId);
+            if (groupMember == null) {
+                GroupMembers.Add(new GroupMember { Name = name, GroupId = groupId });
+                this.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool RemoveGroupMemberEntry(int groupMemberId) {
+            GroupMember? groupMember = GroupMembers.FirstOrDefault(gm => gm.ID == groupMemberId);
+            if (groupMember != null) {
+                GroupMembers.Remove(groupMember);
+                this.SaveChanges();
+                return true;
+            }
+            return false;
         }
         #endregion Methods
     }

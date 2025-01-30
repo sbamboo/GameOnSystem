@@ -48,6 +48,14 @@ namespace GameOnSystem {
 
             // GENERATE GROUP/GAME CONTENT
             GroupTitle.Text = $"{this.resolvedGroup.GameName} ({resolvedGroup.Name})";
+            GroupMembers.Children.Clear();
+            foreach (var groupMember in resolvedGroup.GroupMembers) {
+                GroupMembers.Children.Add(new TextBlock {
+                    Text = groupMember.Name,
+                    FontSize = 15,
+                    Margin = new Thickness(0, 0, 10, 0)
+                });
+            }
 
             if (resolvedGroup.GameBannerUrl != null) {
                 // Add image element to GroupGamePresentWrapper

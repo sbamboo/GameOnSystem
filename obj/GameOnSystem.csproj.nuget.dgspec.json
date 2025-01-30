@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\GameOnSystem.csproj": {}
+    "C:\\csharp\\GameOnSystem\\GameOnSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\GameOnSystem.csproj": {
+    "C:\\csharp\\GameOnSystem\\GameOnSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\GameOnSystem.csproj",
+        "projectUniqueName": "C:\\csharp\\GameOnSystem\\GameOnSystem.csproj",
         "projectName": "GameOnSystem",
-        "projectPath": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\GameOnSystem.csproj",
-        "packagesPath": "C:\\Users\\simon\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\simon\\Documents\\GitHub\\edu\\unity\\GameOnSystem\\obj\\",
+        "projectPath": "C:\\csharp\\GameOnSystem\\GameOnSystem.csproj",
+        "packagesPath": "C:\\Users\\simonkalmi.claesson\\.nuget\\packages\\",
+        "outputPath": "C:\\csharp\\GameOnSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\simon\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\simonkalmi.claesson\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

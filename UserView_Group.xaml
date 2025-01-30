@@ -32,6 +32,9 @@
 
                         <StackPanel Grid.Row="1" Orientation="Vertical">
                             <Button Content="Open Game" Click="GroupGameOpenUrl" Width="150"></Button>
+                            <TextBlock>Gruppmedlämmar</TextBlock>
+                            <StackPanel Name="GroupMembers" Orientation="Horizontal">
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
 
