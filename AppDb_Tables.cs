@@ -61,12 +61,12 @@ namespace GameOnSystem {
         public string GameBannerUrl { get; set; }
         public int EditionID { get; set; }
     }
-    internal class DbTableModel_Participants {
+    internal class DbTableModel_Participant {
         public int ID { get; set; }
         public string Name { get; set; }
         public int EditionId { get; set; }
     }
-    internal class DbTableModel_GroupParticipants {
+    internal class DbTableModel_GroupParticipant {
         public int ID { get; set; }
         public int ParticipantID { get; set; }
         public int GroupID { get; set; }

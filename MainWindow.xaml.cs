@@ -21,7 +21,10 @@ namespace GameOnSystem
         {
             InitializeComponent();
 
-            Debug.WriteLine("Hello World!");
+            AppDbContext appDbContext = new AppDbContext(
+                useSqlite: false,
+                mysqlConnectionString: "server=localhost;user=root;password=;database=gameon_v2"
+            );
         }
     }
 }
