@@ -1,0 +1,77 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Window Style -->
+    <Style x:Key="WindowStyle" TargetType="Window">
+        <Setter Property="Foreground" Value="#D3D3D3"></Setter>
+        <Setter Property="Background" Value="#252525"></Setter>
+    </Style>
+
+    <!-- Element Style -->
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#D3D3D3"></Setter>
+    </Style>
+    
+    <Style TargetType="TextBox">
+        <Setter Property="Foreground" Value="#D3D3D3"/>
+        <Setter Property="Background" Value="#343434"/>
+        <Setter Property="BorderBrush" Value="#606060"/>
+    </Style>
+
+    <Style TargetType="PasswordBox">
+        <Setter Property="Foreground" Value="#D3D3D3"/>
+        <Setter Property="Background" Value="#343434"/>
+        <Setter Property="BorderBrush" Value="#606060"/>
+    </Style>
+
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="#323232"/>
+        <Setter Property="BorderBrush" Value="#2D2D2D"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <!-- Triggers -->
+        <Style.Triggers>
+            <!-- Hover Background Trigger -->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#444444"/>
+            </Trigger>
+            <!-- Disabled -->
+            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="False">
+                <Setter Property="Background" Value="#292929"/>
+                <Setter Property="Foreground" Value="#737373"></Setter>
+                <Setter Property="BorderBrush" Value="#2D2D2D"/>
+            </DataTrigger>
+
+        </Style.Triggers>
+    </Style>
+
+    <!-- Named Styles -->
+    <Style x:Key="StdTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#D3D3D3"/>
+    </Style>
+    
+    <Style x:Key="ErrorTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Red"/>
+    </Style>
+
+    <Style x:Key="GrayedOutTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="DimGray"/>
+    </Style>
+
+    <Style x:Key="LoginButton" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#D3D3D3"/>
+    </Style>
+
+    <Style x:Key="DisconnectButton" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#d17171"/>
+    </Style>
+
+</ResourceDictionary>

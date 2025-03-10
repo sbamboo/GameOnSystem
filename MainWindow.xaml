@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameOnSystem"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="GameOnSystem" Height="550" Width="1020"
+        Style="{StaticResource WindowStyle}">
     <Grid>
-
+        <ContentControl x:Name="MainContent"></ContentControl>
     </Grid>
 </Window>
