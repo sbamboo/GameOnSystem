@@ -33,7 +33,7 @@ namespace GameOnSystem.Pages {
         }
 
         private void InitDatabaseValues() {
-            windowInstance.Shared.appDbContext.AddEdition(
+            DbTableModel_Edition go2024 = windowInstance.Shared.appDbContext.AddEdition(
                 "GameOn 2024",            // Name
                 "Reflections",            // Theme
                 1,                        // GradeMin
@@ -43,15 +43,84 @@ namespace GameOnSystem.Pages {
                 new DateTime(2025, 3, 12) // GradingDeadline
             );
 
-            DbTableModel_Category? entertainment = windowInstance.Shared.appDbContext.AddCategory("Underhållning");
-            DbTableModel_Category? theme_keeping = windowInstance.Shared.appDbContext.AddCategory("Uppfyllande av tema");
-            DbTableModel_Category? graphics_coherence = windowInstance.Shared.appDbContext.AddCategory("Grafikens sammanhållning");
-            DbTableModel_Category? graphics_theme_keeping = windowInstance.Shared.appDbContext.AddCategory("Grafikens koppling till temat");
-            DbTableModel_Category? code_structure_and_docs = windowInstance.Shared.appDbContext.AddCategory("Programmeringskodens struktur och dokumentation");
-            DbTableModel_Category? physics_math_implementation = windowInstance.Shared.appDbContext.AddCategory("Implementering av fysik / matematik");
-            DbTableModel_Category? playability = windowInstance.Shared.appDbContext.AddCategory("Spelbarhet");
+            DbTableModel_Category entertainment = windowInstance.Shared.appDbContext.AddCategory("Underhållning");
+            DbTableModel_Category theme_keeping = windowInstance.Shared.appDbContext.AddCategory("Uppfyllande av tema");
+            DbTableModel_Category graphics_coherence = windowInstance.Shared.appDbContext.AddCategory("Grafikens sammanhållning");
+            DbTableModel_Category graphics_theme_keeping = windowInstance.Shared.appDbContext.AddCategory("Grafikens koppling till temat");
+            DbTableModel_Category code_structure_and_docs = windowInstance.Shared.appDbContext.AddCategory("Programmeringskodens struktur och dokumentation");
+            DbTableModel_Category physics_math_implementation = windowInstance.Shared.appDbContext.AddCategory("Implementering av fysik / matematik");
+            DbTableModel_Category playability = windowInstance.Shared.appDbContext.AddCategory("Spelbarhet");
 
             DbTableModel_AppUser user1 = windowInstance.Shared.appDbContext.AddAppUser("User1", "user1@example.com", "user1", false);
+            user1.AddFocusCategory(windowInstance.Shared.appDbContext, entertainment.ID);
+            user1.AddFocusCategory(windowInstance.Shared.appDbContext, physics_math_implementation.ID);
+            DbTableModel_AppUser user2 = windowInstance.Shared.appDbContext.AddAppUser("User2", "user2@example.com", "user2", false);
+            user2.AddFocusCategory(windowInstance.Shared.appDbContext, code_structure_and_docs.ID);
+            user2.AddFocusCategory(windowInstance.Shared.appDbContext, playability.ID);
+
+            DbTableModel_Group go2024_group1 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 1",
+                "The Adventures Of Lucy Speculum",
+                "https://go2024.ntigskovde.se/gr1/index.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group1.png",
+                go2024.ID
+            );
+
+            DbTableModel_Group go2024_group2 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp p2",
+                "Unchained",
+                "https://go2024.ntigskovde.se/gr2/index.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group2.png",
+                go2024.ID
+            );
+
+            DbTableModel_Group go2024_group3 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 3",
+                "Flintiga Vampyren",
+                "https://go2024.ntigskovde.se/gr3/index.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group3.png",
+                go2024.ID
+            );
+
+            DbTableModel_Group go2024_group4 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 4",
+                "Game 4",
+                "https://go2024.ntigskovde.se/gr4/index.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group4.png",
+                go2024.ID
+            );
+
+            DbTableModel_Group go2024_group5 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 5",
+                "MirrorRhythm",
+                "https://go2024.ntigskovde.se/gr5/Meny.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group5.png",
+                go2024.ID
+            );
+
+            DbTableModel_Group go2024_group6 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 6",
+                "Game 6",
+                "https://go2024.ntigskovde.se/gr6/index.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group6.png",
+                go2024.ID
+            );
+
+            DbTableModel_Group go2024_group7 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 7",
+                "Parry On",
+                "https://go2024.ntigskovde.se/gr7/index.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group7.png",
+                go2024.ID
+            );
+
+            DbTableModel_Group go2024_group8 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 8",
+                "Crystal Adventure",
+                "https://go2024.ntigskovde.se/gr8/index.html",
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group8.png",
+                go2024.ID
+            );
         }
 
         private async void ModeSelectExternal(object sender, RoutedEventArgs e) {
