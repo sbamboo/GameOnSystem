@@ -51,11 +51,12 @@ namespace GameOnSystem {
             }
         }
 
-        public int GetGroupCount(AppDbContext appDbContext) {
-            return appDbContext.Groups.Count(g => g.EditionID == this.ID);
-        }
         public List<DbTableModel_Group> GetGroups(AppDbContext appDbContext) {
             return appDbContext.Groups.Where(g => g.EditionID == this.ID).ToList();
+        }
+
+        public List<DbTableModel_Participant> GetParticipants(AppDbContext appDbContext) {
+            return appDbContext.Participants.Where(p => p.EditionID == this.ID).ToList();
         }
     }
 
@@ -99,7 +100,7 @@ namespace GameOnSystem {
             List<DbTableModel_Category> categories = new List<DbTableModel_Category>();
             List<DbTableModel_UserCat> userCats = appDbContext.UserCats.Where(uc => uc.AppUserID == this.ID).ToList();
             foreach (DbTableModel_UserCat userCat in userCats) {
-                categories.Add(appDbContext.Categories.First(c => c.ID == userCat.CategoryID));)
+                categories.Add(appDbContext.Categories.First(c => c.ID == userCat.CategoryID));
             }
             return categories;
         }
@@ -196,6 +197,14 @@ namespace GameOnSystem {
                 return false;
             }
         }
+
+        public DbTableModel_AppUser GetAppUser(AppDbContext appDbContext) {
+            return appDbContext.AppUsers.First(u => u.ID == this.AppUserID);
+        }
+
+        public DbTableModel_Category GetCategory(AppDbContext appDbContext) {
+            return appDbContext.Categories.First(c => c.ID == this.CategoryID);
+        }
     }
 
     internal class DbTableModel_Group {
@@ -222,6 +231,42 @@ namespace GameOnSystem {
                 return false;
             }
         }
+
+        public List<DbTableModel_Participant> GetParticipants(AppDbContext appDbContext) {
+            List<DbTableModel_Participant> participants = new List<DbTableModel_Participant>();
+            List<DbTableModel_GroupParticipant> groupParticipants = appDbContext.GroupParticipants.Where(gp => gp.GroupID == this.ID).ToList();
+            foreach (DbTableModel_GroupParticipant groupParticipant in groupParticipants) {
+                participants.Add(appDbContext.Participants.First(p => p.ID == groupParticipant.ParticipantID));
+            }
+            return participants;
+        }
+
+        public bool HasParticipant(AppDbContext appDbContext, int participantID) {
+            return appDbContext.GroupParticipants.Any(gp => gp.ParticipantID == participantID && gp.GroupID == this.ID);
+        }
+
+        public void AddParticipant(AppDbContext appDbContext, int participantID) {
+            // Add if not already
+            if (!HasParticipant(appDbContext, participantID)) {
+                appDbContext.AddGroupParticipant(participantID, this.ID);
+            }
+        }
+
+        public void RemoveParticipant(AppDbContext appDbContext, int participantID) {
+            // Remove if exists
+            if (HasParticipant(appDbContext, participantID)) {
+                DbTableModel_GroupParticipant groupParticipant = appDbContext.GroupParticipants.First(gp => gp.ParticipantID == participantID && gp.GroupID == this.ID);
+                appDbContext.RemoveGroupParticipant(groupParticipant.ID);
+            }
+        }
+
+        public void CleanParticipants(AppDbContext appDbContext) {
+            List<DbTableModel_GroupParticipant> groupParticipants = appDbContext.GroupParticipants.Where(gp => gp.GroupID == this.ID).ToList();
+            foreach (DbTableModel_GroupParticipant groupParticipant in groupParticipants) {
+                appDbContext.RemoveGroupParticipant(groupParticipant.ID);
+            }
+        }
+
     }
 
     internal class DbTableModel_Participant {
@@ -240,6 +285,41 @@ namespace GameOnSystem {
             } catch (Exception e) {
                 Debug.Print($"DbTableModel_Participant.Update.Error: {e.Message}");
                 return false;
+            }
+        }
+
+        public List<DbTableModel_Group> GetGroups(AppDbContext appDbContext) {
+            List<DbTableModel_Group> groups = new List<DbTableModel_Group>();
+            List<DbTableModel_GroupParticipant> groupParticipants = appDbContext.GroupParticipants.Where(gp => gp.ParticipantID == this.ID).ToList();
+            foreach (DbTableModel_GroupParticipant groupParticipant in groupParticipants) {
+                groups.Add(appDbContext.Groups.First(g => g.ID == groupParticipant.GroupID));
+            }
+            return groups;
+        }
+
+        public bool InGroup(AppDbContext appDbContext, int groupID) {
+            return appDbContext.GroupParticipants.Any(gp => gp.GroupID == groupID && gp.ParticipantID == this.ID);
+        }
+
+        public void AddToGroup(AppDbContext appDbContext, int groupID) {
+            // Add if not already
+            if (!InGroup(appDbContext, groupID)) {
+                appDbContext.AddGroupParticipant(this.ID, groupID);
+            }
+        }
+
+        public void RemoveFromGroup(AppDbContext appDbContext, int groupID) {
+            // Remove if exists
+            if (InGroup(appDbContext, groupID)) {
+                DbTableModel_GroupParticipant groupParticipant = appDbContext.GroupParticipants.First(gp => gp.GroupID == groupID && gp.ParticipantID == this.ID);
+                appDbContext.RemoveGroupParticipant(groupParticipant.ID);
+            }
+        }
+
+        public void CleanGroups(AppDbContext appDbContext) {
+            List<DbTableModel_GroupParticipant> groupParticipants = appDbContext.GroupParticipants.Where(gp => gp.ParticipantID == this.ID).ToList();
+            foreach (DbTableModel_GroupParticipant groupParticipant in groupParticipants) {
+                appDbContext.RemoveGroupParticipant(groupParticipant.ID);
             }
         }
     }
@@ -261,9 +341,30 @@ namespace GameOnSystem {
                 return false;
             }
         }
+
+        public DbTableModel_Group GetGroup(AppDbContext appDbContext) {
+            return appDbContext.Groups.First(g => g.ID == this.GroupID);
+        }
+
+        public DbTableModel_Participant GetParticipant(AppDbContext appDbContext) {
+            return appDbContext.Participants.First(p => p.ID == this.ParticipantID);
+        }
     }
 
     internal class DbTableModel_Grade {
+
+        /*
+         * NumGradeType:
+         *   1 = "Integers" (i to i) {min-max-range: x > x}
+         *   2 = "Letters A-F"       {min-max-range: 0 > 5}
+         *   3 = "Letters A-Z"       {min-max-range: 0 > 25}
+         *   4 = "Letters A-Ö"       {min-max-range: 0 > 28}
+         *   5 = "Abbriv IG-MVG" (IG, G, VG, MVG) {min-max-range: 0 > 3}
+         *   
+         * When changing the GradeType the admin defined value will be reset,
+         *   and for types other then "Integers" min/max are auto filled.
+        */
+
         public int ID { get; set; }
         public int NumValue { get; set; }
         public int GradeType { get; set; }
@@ -284,6 +385,120 @@ namespace GameOnSystem {
             } catch (Exception e) {
                 Debug.Print($"DbTableModel_Grade.Update.Error: {e.Message}");
                 return false;
+            }
+        }
+
+        public DbTableModel_Group GetGroup(AppDbContext appDbContext) {
+            return appDbContext.Groups.First(g => g.ID == this.GroupId);
+        }
+
+        public DbTableModel_UserCat GetUserCat(AppDbContext appDbContext) {
+            return appDbContext.UserCats.First(uc => uc.ID == this.UserCatId);
+        }
+
+        public DbTableModel_AppUser GetUser(AppDbContext appDbContext) {
+            return appDbContext.AppUsers.First(u => u.ID == GetUserCat(appDbContext).AppUserID);
+        }
+
+        public DbTableModel_Category GetCategory(AppDbContext appDbContext) {
+            return appDbContext.Categories.First(c => c.ID == GetUserCat(appDbContext).CategoryID);
+        }
+
+        public string GetGradeTypeName() {
+            switch (this.GradeType) {
+                case 1:
+                    return "Integers";
+                case 2:
+                    return "Letters A-F";
+                case 3:
+                    return "Letters A-Z";
+                case 4:
+                    return "Letters A-Ö";
+                case 5:
+                    return "Abbriv IG-MVG";
+                default:
+                    return "Unknown";
+            }
+        }
+
+        public bool IsValidForType(int numValue) {
+            switch (this.GradeType) {
+                // Integers (i to i) {min-max-range: x > x}
+                case 1:
+                    return true;
+                // Letters A-F {min-max-range: 0 > 5}
+                case 2:
+                    return numValue >= 0 && numValue <= 5;
+                // Letters A-Z {min-max-range: 0 > 25}
+                case 3:
+                    return numValue >= 0 && numValue <= 25;
+                // Letters A-Ö {min-max-range: 0 > 28}
+                case 4:
+                    return numValue >= 0 && numValue <= 28;
+                // Abbriv IG-MVG (IG, G, VG, MVG) {min-max-range: 0 > 3}
+                case 5:
+                    return numValue >= 0 && numValue <= 3;
+                // Unknown
+                default:
+                    return false;
+            }
+        }
+
+        public string GetGradeAsString() {
+            switch (this.GradeType) {
+                // Integers (i to i) {min-max-range: x > x}
+                case 1:
+                    return this.NumValue.ToString();
+                // Letters A-F {min-max-range: 0 > 5}
+                case 2:
+                    if (this.NumValue < 0 || this.NumValue > 5) {
+                        return "Unknown";
+                    }
+                    return ((char)(this.NumValue + 65)).ToString();
+
+                // Letters A-Z {min-max-range: 0 > 25}
+                case 3:
+                    if (this.NumValue < 0 || this.NumValue > 25) {
+                        return "Unknown";
+                    }
+                    return ((char)(this.NumValue + 65)).ToString();
+                // Letters A-Ö {min-max-range: 0 > 28}
+                case 4:
+                    if (this.NumValue < 0 || this.NumValue > 28) {
+                        return "Unknown";
+                    }
+                    if (this.NumValue < 26) {
+                        return ((char)(this.NumValue + 65)).ToString();
+                    } else {
+                        switch (this.NumValue) {
+                            case 26:
+                                return "Å";
+                            case 27:
+                                return "Ä";
+                            case 28:
+                                return "Ö";
+                            default:
+                                return "Unknown";
+                        }
+                    }
+                
+                // Abbriv IG-MVG (IG, G, VG, MVG) {min-max-range: 0 > 3}
+                case 5:
+                    switch (this.NumValue) {
+                        case 0:
+                            return "IG";
+                        case 1:
+                            return "G";
+                        case 2:
+                            return "VG";
+                        case 3:
+                            return "MVG";
+                        default:
+                            return "Unknown";
+                    }
+                // Unknown
+                default:
+                    return "Unknown";
             }
         }
     }

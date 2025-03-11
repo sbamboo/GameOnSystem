@@ -178,10 +178,11 @@ namespace GameOnSystem {
             return Editions.ToList();
         }
 
-        public bool AddEdition(string name, string theme, int gradeMin, int gradeMax, int gradeType, bool isActive, DateTime? gradingDeadline) {
-            Editions.Add(new DbTableModel_Edition { Name = name, Theme = theme, GradeMin = gradeMin, GradeMax = gradeMax, GradeType = gradeType, IsActive = isActive, GradingDeadline = gradingDeadline });
+        public DbTableModel_Edition AddEdition(string name, string theme, int gradeMin, int gradeMax, int gradeType, bool isActive, DateTime? gradingDeadline) {
+            DbTableModel_Edition edition = new DbTableModel_Edition { Name = name, Theme = theme, GradeMin = gradeMin, GradeMax = gradeMax, GradeType = gradeType, IsActive = isActive, GradingDeadline = gradingDeadline };
+            Editions.Add(edition);
             SaveChanges();
-            return true;
+            return edition;
         }
 
         public bool RemoveEdition(int editionID) {
@@ -201,19 +202,20 @@ namespace GameOnSystem {
         #endregion
 
         #region AppUsers
-        public DbTableModel_AppUser? GetUser(int ID) {
+        public DbTableModel_AppUser? GetAppUser(int ID) {
             return AppUsers.FirstOrDefault(u => u.ID == ID);
         }
-        public List<DbTableModel_AppUser> GetUsers() {
+        public List<DbTableModel_AppUser> GetAppUsers() {
             return AppUsers.ToList();
         }
-        public bool AddUser(string name, string email, string password, bool isAdmin, bool isProtected) {
-            AppUsers.Add(new DbTableModel_AppUser { Name = name, Email = email, Password = password, IsAdmin = isAdmin, IsProtected = isProtected });
+        public DbTableModel_AppUser AddAppUser(string name, string email, string password, bool isAdmin, bool isProtected = false) {
+            DbTableModel_AppUser user = new DbTableModel_AppUser { Name = name, Email = email, Password = password, IsAdmin = isAdmin, IsProtected = isProtected };
+            AppUsers.Add(user);
             SaveChanges();
-            return true;
+            return user;
         }
 
-        public bool RemoveUser(int userID) {
+        public bool RemoveAppUser(int userID) {
             DbTableModel_AppUser? user = AppUsers.FirstOrDefault(u => u.ID == userID);
             if (user != null) {
                 // Check if user is protected
@@ -247,10 +249,11 @@ namespace GameOnSystem {
         public List<DbTableModel_Category> GetCategories() {
             return Categories.ToList();
         }
-        public bool AddCategory(string name) {
-            Categories.Add(new DbTableModel_Category { Name = name });
+        public DbTableModel_Category AddCategory(string name) {
+            DbTableModel_Category category = new DbTableModel_Category { Name = name };
+            Categories.Add(category);
             SaveChanges();
-            return true;
+            return category;
         }
         public bool RemoveCategory(int categoryID) {
             DbTableModel_Category? category = Categories.FirstOrDefault(c => c.ID == categoryID);
@@ -273,10 +276,11 @@ namespace GameOnSystem {
         public List<DbTableModel_UserCat> GetUserCats() {
             return UserCats.ToList();
         }
-        public bool AddUserCat(int appUserID, int categoryID) {
-            UserCats.Add(new DbTableModel_UserCat { AppUserID = appUserID, CategoryID = categoryID });
+        public DbTableModel_UserCat AddUserCat(int appUserID, int categoryID) {
+            DbTableModel_UserCat userCat = new DbTableModel_UserCat { AppUserID = appUserID, CategoryID = categoryID };
+            UserCats.Add(userCat);
             SaveChanges();
-            return true;
+            return userCat;
         }
         public bool RemoveUserCat(int userCatID) {
             DbTableModel_UserCat? userCat = UserCats.FirstOrDefault(uc => uc.ID == userCatID);
@@ -297,10 +301,11 @@ namespace GameOnSystem {
             return Groups.ToList();
         }
 
-        public bool AddGroup(string name, string gameName, string gameUrl, string gameBannerUrl, int editionID) {
-            Groups.Add(new DbTableModel_Group { Name = name, GameName = gameName, GameUrl = gameUrl, GameBannerUrl = gameBannerUrl, EditionID = editionID });
+        public DbTableModel_Group AddGroup(string name, string gameName, string gameUrl, string gameBannerUrl, int editionID) {
+            DbTableModel_Group group = new DbTableModel_Group { Name = name, GameName = gameName, GameUrl = gameUrl, GameBannerUrl = gameBannerUrl, EditionID = editionID };
+            Groups.Add(group);
             SaveChanges();
-            return true;
+            return group;
         }
         public bool RemoveGroup(int groupID) {
             DbTableModel_Group? group = Groups.FirstOrDefault(g => g.ID == groupID);
@@ -320,10 +325,11 @@ namespace GameOnSystem {
         public List<DbTableModel_Participant> GetParticipants() {
             return Participants.ToList();
         }
-        public bool AddParticipant(string name, int editionID) {
-            Participants.Add(new DbTableModel_Participant { Name = name, EditionID = editionID });
+        public DbTableModel_Participant AddParticipant(string name, int editionID) {
+            DbTableModel_Participant participant = new DbTableModel_Participant { Name = name, EditionID = editionID };
+            Participants.Add(participant);
             SaveChanges();
-            return true;
+            return participant;
         }
         public bool RemoveParticipant(int participantID) {
             DbTableModel_Participant? participant = Participants.FirstOrDefault(p => p.ID == participantID);
@@ -345,10 +351,11 @@ namespace GameOnSystem {
             return GroupParticipants.ToList();
         }
 
-        public bool AddGroupParticipant(int groupID, int participantID) {
-            GroupParticipants.Add(new DbTableModel_GroupParticipant { GroupID = groupID, ParticipantID = participantID });
+        public DbTableModel_GroupParticipant AddGroupParticipant(int groupID, int participantID) {
+            DbTableModel_GroupParticipant groupParticipant = new DbTableModel_GroupParticipant { GroupID = groupID, ParticipantID = participantID };
+            GroupParticipants.Add(groupParticipant);
             SaveChanges();
-            return true;
+            return groupParticipant;
         }
         public bool RemoveGroupParticipant(int groupID) {
             DbTableModel_GroupParticipant? groupParticipant = GroupParticipants.FirstOrDefault(gp => gp.ID == groupID);
@@ -361,7 +368,8 @@ namespace GameOnSystem {
         }
         #endregion
 
-        #region 
+        #region Resolvers
+        #endregion
     }
 }
 

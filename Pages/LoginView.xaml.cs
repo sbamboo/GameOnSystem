@@ -52,11 +52,13 @@ namespace GameOnSystem.Pages {
 
             LoginViewInfoText.Style = (Style)FindResource("ErrorTextBlock");
 
-            if (email == "") {
+            if (string.IsNullOrEmpty(email)) {
                 LoginViewInfoText.Text = "Email cannot be empty!";
+                return;
             }
-            if (password == "") {
+            if (string.IsNullOrEmpty(password)) {
                 LoginViewInfoText.Text = "Password cannot be empty!";
+                return;
             }
 
             try {
@@ -67,7 +69,7 @@ namespace GameOnSystem.Pages {
                     return;
                 }
 
-                DbTableModel_AppUser? user = windowInstance.Shared.appDbContext.GetUser(userId.Value);
+                DbTableModel_AppUser? user = windowInstance.Shared.appDbContext.GetAppUser(userId.Value);
 
                 if (user == null) {
                     LoginViewInfoText.Text = "Failed to login! (No user-data tied to the id)";

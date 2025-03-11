@@ -34,7 +34,7 @@ namespace GameOnSystem.Pages {
 
         private void InitDatabaseValues() {
             windowInstance.Shared.appDbContext.AddEdition(
-                "GameOn 2025",            // Name
+                "GameOn 2024",            // Name
                 "Reflections",            // Theme
                 1,                        // GradeMin
                 6,                        // GradeMax
@@ -42,6 +42,16 @@ namespace GameOnSystem.Pages {
                 false,                    // IsActive
                 new DateTime(2025, 3, 12) // GradingDeadline
             );
+
+            DbTableModel_Category? entertainment = windowInstance.Shared.appDbContext.AddCategory("Underhållning");
+            DbTableModel_Category? theme_keeping = windowInstance.Shared.appDbContext.AddCategory("Uppfyllande av tema");
+            DbTableModel_Category? graphics_coherence = windowInstance.Shared.appDbContext.AddCategory("Grafikens sammanhållning");
+            DbTableModel_Category? graphics_theme_keeping = windowInstance.Shared.appDbContext.AddCategory("Grafikens koppling till temat");
+            DbTableModel_Category? code_structure_and_docs = windowInstance.Shared.appDbContext.AddCategory("Programmeringskodens struktur och dokumentation");
+            DbTableModel_Category? physics_math_implementation = windowInstance.Shared.appDbContext.AddCategory("Implementering av fysik / matematik");
+            DbTableModel_Category? playability = windowInstance.Shared.appDbContext.AddCategory("Spelbarhet");
+
+            DbTableModel_AppUser user1 = windowInstance.Shared.appDbContext.AddAppUser("User1", "user1@example.com", "user1", false);
         }
 
         private async void ModeSelectExternal(object sender, RoutedEventArgs e) {
@@ -141,7 +151,13 @@ namespace GameOnSystem.Pages {
                 });
 
                 windowInstance.Shared.appDbIsUsingSqlite = true;
-                windowInstance.NavigateTo(new Pages.LoginView(windowInstance, this));
+
+                // DEBUG
+                windowInstance.Shared.user = windowInstance.Shared.appDbContext.GetAppUser(1);
+                windowInstance.NavigateTo(new Pages.UserView(windowInstance, this));
+                //DEBUG
+
+                //windowInstance.NavigateTo(new Pages.LoginView(windowInstance, this));
             }
 
             // Enable buttons
