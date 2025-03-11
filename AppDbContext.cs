@@ -129,6 +129,10 @@ namespace GameOnSystem {
             return option?.Value;
         }
 
+        public List<DbTableModel_Option> GetOptions() {
+            return Options.ToList();
+        }
+
         public void SetOption(string field, string value) {
             DbTableModel_Option? option = Options.FirstOrDefault(o => o.Field == field);
             if (option == null) {
@@ -139,6 +143,29 @@ namespace GameOnSystem {
             SaveChanges();
         }
 
+        public bool RemoveOption(string field) {
+            DbTableModel_Option? option = Options.FirstOrDefault(o => o.Field == field);
+            if (option != null) {
+                Options.Remove(option);
+                SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsInited() {
+            return GetOption("inited") == "true";
+        }
+
+        public bool MarkAsInited() {
+            SetOption("inited", "true");
+            return true;
+        }
+
+        public bool MarkAsNotInited() {
+            SetOption("inited", "false");
+            return true;
+        }
         #endregion
 
         #region Editions
@@ -151,26 +178,20 @@ namespace GameOnSystem {
             return Editions.ToList();
         }
 
-        public DbTableTool_Edition? GetEditionAsTool(int ID) {
-            DbTableModel_Edition? edition = Editions.FirstOrDefault(e => e.ID == ID);
-            if (edition == null) {
-                return null;
-            }
-            return new DbTableTool_Edition(this, edition);
-        }
-
-        public List<DbTableTool_Edition> GetEditionsAsTools() {
-            List<DbTableTool_Edition> editions = new List<DbTableTool_Edition>();
-            foreach (DbTableModel_Edition edition in Editions) {
-                editions.Add(new DbTableTool_Edition(this, edition));
-            }
-            return editions;
-        }
-
-        public bool AddEdition(string Name, string Theme, int GradeMin, int GradeMax, int GradeType, bool IsActive, DateTime? GradingDeadline) {
-            Editions.Add(new DbTableModel_Edition { Name = Name, Theme = Theme, GradeMin = GradeMin, GradeMax = GradeMax, GradeType = GradeType, IsActive = IsActive, GradingDeadline = GradingDeadline });
+        public bool AddEdition(string name, string theme, int gradeMin, int gradeMax, int gradeType, bool isActive, DateTime? gradingDeadline) {
+            Editions.Add(new DbTableModel_Edition { Name = name, Theme = theme, GradeMin = gradeMin, GradeMax = gradeMax, GradeType = gradeType, IsActive = isActive, GradingDeadline = gradingDeadline });
             SaveChanges();
             return true;
+        }
+
+        public bool RemoveEdition(int editionID) {
+            DbTableModel_Edition? edition = Editions.FirstOrDefault(e => e.ID == editionID);
+            if (edition != null) {
+                Editions.Remove(edition);
+                SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public DbTableModel_Edition? GetActiveEdition() {
@@ -180,18 +201,167 @@ namespace GameOnSystem {
         #endregion
 
         #region AppUsers
-        public int? ValidateUserLogin(string Email, string Password) {
-            DbTableModel_AppUser? user = AppUsers.FirstOrDefault(u => u.Email == Email && u.Password == Password);
+        public DbTableModel_AppUser? GetUser(int ID) {
+            return AppUsers.FirstOrDefault(u => u.ID == ID);
+        }
+        public List<DbTableModel_AppUser> GetUsers() {
+            return AppUsers.ToList();
+        }
+        public bool AddUser(string name, string email, string password, bool isAdmin, bool isProtected) {
+            AppUsers.Add(new DbTableModel_AppUser { Name = name, Email = email, Password = password, IsAdmin = isAdmin, IsProtected = isProtected });
+            SaveChanges();
+            return true;
+        }
+
+        public bool RemoveUser(int userID) {
+            DbTableModel_AppUser? user = AppUsers.FirstOrDefault(u => u.ID == userID);
+            if (user != null) {
+                // Check if user is protected
+                if (user.IsProtected) {
+                    Debug.Print("Warn: Attempted removal of protected user!");
+                    return false;
+                }
+                // Remove UserCat entry
+                user.CleanFocusCategories(this);
+                // Remove user
+                AppUsers.Remove(user);
+                SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public int? ValidateUserLogin(string email, string password) {
+            DbTableModel_AppUser? user = AppUsers.FirstOrDefault(u => u.Email == email && u.Password == password);
             if (user != null) {
                 return user.ID;
             }
             return null;
         }
+        #endregion
 
-        public DbTableModel_AppUser? GetUser(int ID) {
-            return AppUsers.FirstOrDefault(u => u.ID == ID);
+        #region Categories
+        public DbTableModel_Category? GetCategory(int ID) {
+            return Categories.FirstOrDefault(c => c.ID == ID);
+        }
+        public List<DbTableModel_Category> GetCategories() {
+            return Categories.ToList();
+        }
+        public bool AddCategory(string name) {
+            Categories.Add(new DbTableModel_Category { Name = name });
+            SaveChanges();
+            return true;
+        }
+        public bool RemoveCategory(int categoryID) {
+            DbTableModel_Category? category = Categories.FirstOrDefault(c => c.ID == categoryID);
+            if (category != null) {
+                // Remove UserCat entries
+                category.CleanFocusUsers(this);
+                // Remove the category
+                Categories.Remove(category);
+                SaveChanges();
+                return true;
+            }
+            return false;
         }
         #endregion
+
+        #region UserCats
+        public DbTableModel_UserCat? GetUserCat(int ID) {
+            return UserCats.FirstOrDefault(uc => uc.ID == ID);
+        }
+        public List<DbTableModel_UserCat> GetUserCats() {
+            return UserCats.ToList();
+        }
+        public bool AddUserCat(int appUserID, int categoryID) {
+            UserCats.Add(new DbTableModel_UserCat { AppUserID = appUserID, CategoryID = categoryID });
+            SaveChanges();
+            return true;
+        }
+        public bool RemoveUserCat(int userCatID) {
+            DbTableModel_UserCat? userCat = UserCats.FirstOrDefault(uc => uc.ID == userCatID);
+            if (userCat != null) {
+                UserCats.Remove(userCat);
+                SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region Groups
+        public DbTableModel_Group? GetGroup(int ID) {
+            return Groups.FirstOrDefault(g => g.ID == ID);
+        }
+        public List<DbTableModel_Group> GetGroups() {
+            return Groups.ToList();
+        }
+
+        public bool AddGroup(string name, string gameName, string gameUrl, string gameBannerUrl, int editionID) {
+            Groups.Add(new DbTableModel_Group { Name = name, GameName = gameName, GameUrl = gameUrl, GameBannerUrl = gameBannerUrl, EditionID = editionID });
+            SaveChanges();
+            return true;
+        }
+        public bool RemoveGroup(int groupID) {
+            DbTableModel_Group? group = Groups.FirstOrDefault(g => g.ID == groupID);
+            if (group != null) {
+                Groups.Remove(group);
+                SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region Participants
+        public DbTableModel_Participant? GetParticipant(int ID) {
+            return Participants.FirstOrDefault(p => p.ID == ID);
+        }
+        public List<DbTableModel_Participant> GetParticipants() {
+            return Participants.ToList();
+        }
+        public bool AddParticipant(string name, int editionID) {
+            Participants.Add(new DbTableModel_Participant { Name = name, EditionID = editionID });
+            SaveChanges();
+            return true;
+        }
+        public bool RemoveParticipant(int participantID) {
+            DbTableModel_Participant? participant = Participants.FirstOrDefault(p => p.ID == participantID);
+            if (participant != null) {
+                Participants.Remove(participant);
+                SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region GroupParticipants
+        public DbTableModel_GroupParticipant? GetGroupParticipant(int ID) {
+            return GroupParticipants.FirstOrDefault(gp => gp.ID == ID);
+        }
+
+        public List<DbTableModel_GroupParticipant> GetGroupParticipants() {
+            return GroupParticipants.ToList();
+        }
+
+        public bool AddGroupParticipant(int groupID, int participantID) {
+            GroupParticipants.Add(new DbTableModel_GroupParticipant { GroupID = groupID, ParticipantID = participantID });
+            SaveChanges();
+            return true;
+        }
+        public bool RemoveGroupParticipant(int groupID) {
+            DbTableModel_GroupParticipant? groupParticipant = GroupParticipants.FirstOrDefault(gp => gp.ID == groupID);
+            if (groupParticipant != null) {
+                GroupParticipants.Remove(groupParticipant);
+                SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region 
     }
 }
 

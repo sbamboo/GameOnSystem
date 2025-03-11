@@ -46,14 +46,14 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="5,0,5,0">
-                <TextBlock Name="GroupSelectionTitle" Text="" FontSize="18"></TextBlock>
-                <StackPanel x:Name="GroupSelectionsWrapper" Orientation="Vertical"/>
+                <TextBlock Name="GroupSidebarText" Text="Loading..." FontSize="18" Style="{StaticResource GrayedOutTextBlock}"></TextBlock>
+                <StackPanel x:Name="GroupSidebar" Orientation="Vertical"/>
             </StackPanel>
 
             <Rectangle Fill="#343434" Grid.Column="1"/>
 
-            <StackPanel Name="PerGroupContentHolder" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Stretch">
-                <TextBlock Name="GroupClickMessage" Text="Click a group on the side to view it." FontSize="15" Width="Auto" TextAlignment="Center" Margin="0,40,0,0" Style="{StaticResource GrayedOutTextBlock}"/>
+            <StackPanel Name="GroupContentHolder" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Stretch">
+                <TextBlock Name="NoSelectedGroupText" Text="Loading..." FontSize="15" Width="Auto" TextAlignment="Center" Margin="0,40,0,0" Style="{StaticResource GrayedOutTextBlock}"/>
             </StackPanel>
 
 

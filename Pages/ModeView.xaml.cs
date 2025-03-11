@@ -32,6 +32,18 @@ namespace GameOnSystem.Pages {
             InitializeComponent();
         }
 
+        private void InitDatabaseValues() {
+            windowInstance.Shared.appDbContext.AddEdition(
+                "GameOn 2025",            // Name
+                "Reflections",            // Theme
+                1,                        // GradeMin
+                6,                        // GradeMax
+                1,                        // GradeType
+                false,                    // IsActive
+                new DateTime(2025, 3, 12) // GradingDeadline
+            );
+        }
+
         private async void ModeSelectExternal(object sender, RoutedEventArgs e) {
             ModeSelectInfoText.Style = (Style)FindResource("StdTextBlock");
             ModeSelectInfoText.Text = $"Connecting to {SecretConfig.ExternalDbAdress}...";
@@ -57,6 +69,12 @@ namespace GameOnSystem.Pages {
             await Task.Run(() => {
                 try {
                     windowInstance.Shared.appDbContext = new AppDbContext(false, $"server={SecretConfig.ExternalDbAdress};user={SecretConfig.ExternalDbUser};password={SecretConfig.ExternalDbPassword};database=gameon_v2");
+
+                    if (!windowInstance.Shared.appDbContext.IsInited()) {
+                        InitDatabaseValues();
+                        windowInstance.Shared.appDbContext.MarkAsInited();
+                    }
+
                     windowInstance.Shared.appDbIsInited = true;
                 }
                 catch (Exception ex) {
@@ -98,6 +116,12 @@ namespace GameOnSystem.Pages {
                 // Init the windowInstance.appDbContext with local db file
                 try {
                     windowInstance.Shared.appDbContext = new AppDbContext(true, "Data Source=gameon_v2.db");
+
+                    if (!windowInstance.Shared.appDbContext.IsInited()) {
+                        InitDatabaseValues();
+                        windowInstance.Shared.appDbContext.MarkAsInited();
+                    }
+
                     windowInstance.Shared.appDbIsInited = true;
                 }
                 catch (Exception ex) {

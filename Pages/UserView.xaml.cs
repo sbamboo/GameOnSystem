@@ -50,28 +50,46 @@ namespace GameOnSystem.Pages {
             DbTableModel_Edition? activeEdition = windowInstance.Shared.appDbContext.GetActiveEdition();
             if (activeEdition == null) {
                 EditionTitle.Text = "No active editions at the moment!";
-                GroupClickMessage.Text = "No active editions at the moment, please come back later.";
+                GroupSidebarText.Text = "No active edition.";
+                NoSelectedGroupText.Text = "No active editions at the moment, please come back later.";
                 return;
             }
-
-            DbTableTool_Edition activeEditionTool = new DbTableTool_Edition(windowInstance.Shared.appDbContext, activeEdition);
 
             EditionTitle.Text = $"{activeEdition.Name}";
             if (activeEdition.Theme != "") {
                 EditionTitle.Text += $" (Theme: {activeEdition.Theme})";
             }
 
-            int groupCount = activeEditionTool.GetGroupCount();
-            if (groupCount == 0) {
-                GroupSelectionTitle.Text = "No groups found.";
-                GroupSelectionTitle.Text = $"No groups found for {activeEdition.Name}, please come back later.";
+            List<DbTableModel_Group> groups = windowInstance.Shared.appDbContext.GetGroups();
+            if (groups.Count == 0) {
+                GroupSidebarText.Text = "No groups found.";
+                NoSelectedGroupText.Text = $"No groups found for {activeEdition.Name}, please come back later.";
                 return;
             } else {
-                GroupSelectionTitle.Text = "Select group";
+                GroupSidebarText.Text = "Select group";
+                NoSelectedGroupText.Text = "Click a group on the side to view it.";
             }
 
-            // Get groups
-            List<DbTableTool_Group> groups = activeEditionTool.GetGroupsAsTools();
+            // Get groups and instantiate buttons under sidebar
+            //// Clear sidebar
+            GroupSidebar.Children.Clear();
+
+            //// Generate buttons
+            foreach (DbTableModel_Group group in groups) {
+                Button groupBtn = new Button {
+                    Content = group.Name,
+                    Tag = group.ID,
+                    Margin = new Thickness(0, 0, 0, 5),
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    HorizontalContentAlignment = HorizontalAlignment.Left,
+                    Background = new SolidColorBrush(Color.FromRgb(0, 0, 0)),
+                    Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
+                    BorderThickness = new Thickness(0),
+                    Padding = new Thickness(10, 5, 10, 5),
+                    FontSize = 16
+                };
+                GroupSidebar.Children.Add(groupBtn);
+            }
         }
 
         private void AdminViewBtnClick(object sender, RoutedEventArgs e) {
