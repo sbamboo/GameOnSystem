@@ -22,6 +22,8 @@ namespace GameOnSystem.Pages {
         private readonly MainWindow windowInstance;
         private readonly UserControl? sendingView;
 
+        private UITools_GroupContentHolder uITools_GroupContentHolder;
+
         public UserView(MainWindow WindowInstance, UserControl? SendingView = null) {
             this.windowInstance = WindowInstance;
             this.sendingView = SendingView;
@@ -46,6 +48,9 @@ namespace GameOnSystem.Pages {
                 AdminViewBtn.Visibility = Visibility.Visible;
             }
 
+            // Setup UI tools
+            uITools_GroupContentHolder = new UITools_GroupContentHolder(GroupContentHoldingWrapper, NoSelectedGroupText, GroupContentHolder);
+
             // Update texts
             DbTableModel_Edition? activeEdition = windowInstance.Shared.appDbContext.GetActiveEdition();
             if (activeEdition == null) {
@@ -66,7 +71,7 @@ namespace GameOnSystem.Pages {
                 NoSelectedGroupText.Text = $"No groups found for {activeEdition.Name}, please come back later.";
                 return;
             } else {
-                GroupSidebarText.Text = "Select group";
+                GroupSidebarText.Text = "Select group:";
                 NoSelectedGroupText.Text = "Click a group on the side to view it.";
             }
 
@@ -79,15 +84,10 @@ namespace GameOnSystem.Pages {
                 Button groupBtn = new Button {
                     Content = group.Name,
                     Tag = group.ID,
-                    Margin = new Thickness(0, 0, 0, 5),
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    HorizontalContentAlignment = HorizontalAlignment.Left,
-                    Background = new SolidColorBrush(Color.FromRgb(0, 0, 0)),
-                    Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
-                    BorderThickness = new Thickness(0),
-                    Padding = new Thickness(10, 5, 10, 5),
-                    FontSize = 16
+                    FontSize = 18,
+                    Margin = new Thickness(0, 0, 2.5, 3)
                 };
+                groupBtn.Click += GroupButtonClick;
                 GroupSidebar.Children.Add(groupBtn);
             }
         }
@@ -107,6 +107,19 @@ namespace GameOnSystem.Pages {
             } else {
                 windowInstance.NavigateTo(new LoginView(windowInstance, this));
             }
+        }
+
+        private void GroupButtonClick(object sender, RoutedEventArgs e) {
+            // Get group by id
+            Button btn = (Button)sender;
+            int groupId = (int)btn.Tag;
+            DbTableModel_Group? group = windowInstance.Shared.appDbContext.GetGroup(groupId);
+            if (group == null) { return; }
+
+            // Set main content to 
+            uITools_GroupContentHolder.SetContent(
+                new Pages.Parts.UserViewGroup(windowInstance, group)
+            );
         }
     }
 }

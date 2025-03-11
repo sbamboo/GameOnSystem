@@ -22,12 +22,12 @@
             <TextBlock x:Name="EditionTitle" Text="Loading..." FontSize="30" Grid.Column="0" Margin="10,0,0,0"/>
 
             <DockPanel Grid.Column="2" HorizontalAlignment="Center">
-                <Button x:Name="AdminViewBtn" Height="25" FontSize="18" Margin="10,0,10,0" Visibility="Hidden" Click="AdminViewBtnClick">
+                <Button x:Name="AdminViewBtn" Height="27" FontSize="18" Margin="10,0,10,0" Visibility="Hidden" Click="AdminViewBtnClick">
                     <Button.Content>
                         <TextBlock Text="AdminView" Margin="5,0,5,0"/>
                     </Button.Content>
                 </Button>
-                <Button Height="25" FontSize="18" Margin="10,0,10,0" Click="LogoutBtnClick">
+                <Button Height="27" FontSize="18" Margin="10,0,10,0" Click="LogoutBtnClick">
                     <Button.Content>
                         <TextBlock Text="Logout" Margin="5,0,5,0"/>
                     </Button.Content>
@@ -45,15 +45,22 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Margin="5,0,5,0">
-                <TextBlock Name="GroupSidebarText" Text="Loading..." FontSize="18" Style="{StaticResource GrayedOutTextBlock}"></TextBlock>
-                <StackPanel x:Name="GroupSidebar" Orientation="Vertical"/>
-            </StackPanel>
+            <Grid Grid.Column="0" Margin="5,0,2.5,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Name="GroupSidebarText" Text="Loading..." FontSize="18" Style="{StaticResource GrayedOutTextBlock}"></TextBlock>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="GroupSidebar" Orientation="Vertical"/>
+                </ScrollViewer>
+            </Grid>
 
             <Rectangle Fill="#343434" Grid.Column="1"/>
 
-            <StackPanel Name="GroupContentHolder" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Stretch">
-                <TextBlock Name="NoSelectedGroupText" Text="Loading..." FontSize="15" Width="Auto" TextAlignment="Center" Margin="0,40,0,0" Style="{StaticResource GrayedOutTextBlock}"/>
+            <StackPanel x:Name="GroupContentHoldingWrapper" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Stretch">
+                <TextBlock x:Name="NoSelectedGroupText" Text="Loading..." FontSize="15" Width="Auto" TextAlignment="Center" Margin="0,40,0,0" Style="{StaticResource GrayedOutTextBlock}"/>
+                <ContentControl x:Name="GroupContentHolder"></ContentControl>
             </StackPanel>
 
 

@@ -33,14 +33,24 @@ namespace GameOnSystem.Pages {
         }
 
         private void InitDatabaseValues() {
+            DbTableModel_Edition go2023 = windowInstance.Shared.appDbContext.AddEdition(
+                "GameOn 2023",            // Name
+                "???",                    // Theme
+                1,                        // GradeMin
+                6,                        // GradeMax
+                1,                        // GradeType
+                false,                    // IsActive
+                new DateTime(2023, 3, 12) // GradingDeadline
+            );
+
             DbTableModel_Edition go2024 = windowInstance.Shared.appDbContext.AddEdition(
                 "GameOn 2024",            // Name
                 "Reflections",            // Theme
                 1,                        // GradeMin
                 6,                        // GradeMax
                 1,                        // GradeType
-                false,                    // IsActive
-                new DateTime(2025, 3, 12) // GradingDeadline
+                true,                     // IsActive
+                new DateTime(2024, 3, 12) // GradingDeadline
             );
 
             DbTableModel_Category entertainment = windowInstance.Shared.appDbContext.AddCategory("Underhållning");
@@ -51,76 +61,100 @@ namespace GameOnSystem.Pages {
             DbTableModel_Category physics_math_implementation = windowInstance.Shared.appDbContext.AddCategory("Implementering av fysik / matematik");
             DbTableModel_Category playability = windowInstance.Shared.appDbContext.AddCategory("Spelbarhet");
 
-            DbTableModel_AppUser user1 = windowInstance.Shared.appDbContext.AddAppUser("User1", "user1@example.com", "user1", false);
+            DbTableModel_AppUser user1 = windowInstance.Shared.appDbContext.AddAppUser("AppUser1", "user1@example.com", "user1", false);
             user1.AddFocusCategory(windowInstance.Shared.appDbContext, entertainment.ID);
             user1.AddFocusCategory(windowInstance.Shared.appDbContext, physics_math_implementation.ID);
-            DbTableModel_AppUser user2 = windowInstance.Shared.appDbContext.AddAppUser("User2", "user2@example.com", "user2", false);
+            DbTableModel_AppUser user2 = windowInstance.Shared.appDbContext.AddAppUser("AppUser2", "user2@example.com", "user2", false);
             user2.AddFocusCategory(windowInstance.Shared.appDbContext, code_structure_and_docs.ID);
             user2.AddFocusCategory(windowInstance.Shared.appDbContext, playability.ID);
+
+            DbTableModel_Participant participant1 = windowInstance.Shared.appDbContext.AddParticipant("Participant 1");
+            DbTableModel_Participant participant2 = windowInstance.Shared.appDbContext.AddParticipant("Participant 2");
+            DbTableModel_Participant participant3 = windowInstance.Shared.appDbContext.AddParticipant("Participant 3");
+            DbTableModel_Participant participant4 = windowInstance.Shared.appDbContext.AddParticipant("Participant 4");
+            DbTableModel_Participant participant5 = windowInstance.Shared.appDbContext.AddParticipant("Participant 5");
+            DbTableModel_Participant participant6 = windowInstance.Shared.appDbContext.AddParticipant("Participant 6");
+            DbTableModel_Participant participant7 = windowInstance.Shared.appDbContext.AddParticipant("Participant 7");
+            DbTableModel_Participant participant8 = windowInstance.Shared.appDbContext.AddParticipant("Participant 8");
+            DbTableModel_Participant participant9 = windowInstance.Shared.appDbContext.AddParticipant("Participant 9");
+            DbTableModel_Participant participant10 = windowInstance.Shared.appDbContext.AddParticipant("Participant 10");
+            DbTableModel_Participant participant11 = windowInstance.Shared.appDbContext.AddParticipant("Participant 11"); // Unasigned in example
+            DbTableModel_Participant participant12 = windowInstance.Shared.appDbContext.AddParticipant("Participant 12"); // Unasigned in example
+
 
             DbTableModel_Group go2024_group1 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 1",
                 "The Adventures Of Lucy Speculum",
                 "https://go2024.ntigskovde.se/gr1/index.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group1.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group1.png"
             );
+            go2024_group1.AddParticipant(windowInstance.Shared.appDbContext, participant1.ID);
 
             DbTableModel_Group go2024_group2 = windowInstance.Shared.appDbContext.AddGroup(
-                "Grupp p2",
+                "Grupp 2",
                 "Unchained",
                 "https://go2024.ntigskovde.se/gr2/index.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group2.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group2.png"
             );
+            go2024_group2.AddParticipant(windowInstance.Shared.appDbContext, participant2.ID);
 
             DbTableModel_Group go2024_group3 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 3",
                 "Flintiga Vampyren",
                 "https://go2024.ntigskovde.se/gr3/index.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group3.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group3.png"
             );
+            go2024_group3.AddParticipant(windowInstance.Shared.appDbContext, participant3.ID);
 
             DbTableModel_Group go2024_group4 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 4",
                 "Game 4",
                 "https://go2024.ntigskovde.se/gr4/index.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group4.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group4.png"
             );
+            go2024_group4.AddParticipant(windowInstance.Shared.appDbContext, participant4.ID);
 
             DbTableModel_Group go2024_group5 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 5",
                 "MirrorRhythm",
                 "https://go2024.ntigskovde.se/gr5/Meny.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group5.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group5.png"
             );
+            go2024_group5.AddParticipant(windowInstance.Shared.appDbContext, participant5.ID);
+            go2024_group5.AddParticipant(windowInstance.Shared.appDbContext, participant9.ID);
 
             DbTableModel_Group go2024_group6 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 6",
                 "Game 6",
                 "https://go2024.ntigskovde.se/gr6/index.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group6.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group6.png"
             );
+            go2024_group6.AddParticipant(windowInstance.Shared.appDbContext, participant6.ID);
 
             DbTableModel_Group go2024_group7 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 7",
                 "Parry On",
                 "https://go2024.ntigskovde.se/gr7/index.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group7.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group7.png"
             );
+            go2024_group7.AddParticipant(windowInstance.Shared.appDbContext, participant7.ID);
 
             DbTableModel_Group go2024_group8 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 8",
                 "Crystal Adventure",
                 "https://go2024.ntigskovde.se/gr8/index.html",
-                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group8.png",
-                go2024.ID
+                go2024.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group8.png"
             );
+            go2024_group8.AddParticipant(windowInstance.Shared.appDbContext, participant8.ID);
+            go2024_group8.AddParticipant(windowInstance.Shared.appDbContext, participant10.ID);
         }
 
         private async void ModeSelectExternal(object sender, RoutedEventArgs e) {
@@ -221,12 +255,7 @@ namespace GameOnSystem.Pages {
 
                 windowInstance.Shared.appDbIsUsingSqlite = true;
 
-                // DEBUG
-                windowInstance.Shared.user = windowInstance.Shared.appDbContext.GetAppUser(1);
-                windowInstance.NavigateTo(new Pages.UserView(windowInstance, this));
-                //DEBUG
-
-                //windowInstance.NavigateTo(new Pages.LoginView(windowInstance, this));
+                windowInstance.NavigateTo(new Pages.LoginView(windowInstance, this));
             }
 
             // Enable buttons

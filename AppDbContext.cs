@@ -301,8 +301,11 @@ namespace GameOnSystem {
             return Groups.ToList();
         }
 
-        public DbTableModel_Group AddGroup(string name, string gameName, string gameUrl, string gameBannerUrl, int editionID) {
-            DbTableModel_Group group = new DbTableModel_Group { Name = name, GameName = gameName, GameUrl = gameUrl, GameBannerUrl = gameBannerUrl, EditionID = editionID };
+        public DbTableModel_Group AddGroup(string name, string gameName, string gameUrl, int editionID, string? gameBannerUrl = null) {
+            DbTableModel_Group group = new DbTableModel_Group { Name = name, GameName = gameName, GameUrl = gameUrl, EditionID = editionID };
+            if (gameBannerUrl != null) {
+                group.GameBannerUrl = gameBannerUrl;
+            }
             Groups.Add(group);
             SaveChanges();
             return group;
@@ -325,8 +328,11 @@ namespace GameOnSystem {
         public List<DbTableModel_Participant> GetParticipants() {
             return Participants.ToList();
         }
-        public DbTableModel_Participant AddParticipant(string name, int editionID) {
-            DbTableModel_Participant participant = new DbTableModel_Participant { Name = name, EditionID = editionID };
+        public DbTableModel_Participant AddParticipant(string name, int? editionID = null) {
+            DbTableModel_Participant participant = new DbTableModel_Participant { Name = name };
+            if (editionID != null) {
+                participant.EditionID = editionID.Value;
+            }
             Participants.Add(participant);
             SaveChanges();
             return participant;
