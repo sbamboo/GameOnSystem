@@ -258,4 +258,17 @@
         </Setter>
     </Style>
 
+    <Style x:Key="PlayButton" TargetType="Canvas">
+        <Setter Property="Opacity" Value="0.6"/>
+
+        <!-- Triggers -->
+        <Style.Triggers>
+            <!-- Hover Background Trigger -->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="1"/>
+            </Trigger>
+
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

@@ -36,6 +36,30 @@ namespace GameOnSystem {
         }
 
         public void NavigateTo(UserControl view) {
+
+            if (Shared.appDbIsUsingSqlite) {
+                Title = Shared.coreTitle + " | Local database";
+            } else {
+                Title = Shared.coreTitle + $" | Connected to {SecretConfig.ExternalDbAdress}";
+            }
+            
+            switch (view.GetType().Name) {
+                case "ModeSelect":
+                    Title += " | Mode select";
+                    break;
+                case "LoginView":
+                    Title += " | Login";
+                    break;
+                case "UserView":
+                    Title += " | Grading View";
+                    break;
+                case "AdminView":
+                    Title += " | Admin View";
+                    break;
+                default:
+                    break;
+            }
+
             MainContent.Content = view;
         }
     }

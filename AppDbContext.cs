@@ -153,6 +153,28 @@ namespace GameOnSystem {
             return false;
         }
 
+        public bool SetFlag(string field, bool value=true) {
+            SetOption(field, value ? "true" : "false");
+            return value;
+        }
+
+        public bool UnsetFlag(string field) {
+            SetOption(field, "false");
+            return false;
+        }
+
+        public bool GetFlag(string field) {
+            return GetOption(field) == "true";
+        }
+
+        public object GetFlagWdef(string field, object? defaultValue=null) {
+            string? value = GetOption(field);
+            if (value == null) {
+                return defaultValue ?? false;
+            }
+            return value == "true";
+        }
+
         public bool IsInited() {
             return GetOption("inited") == "true";
         }
@@ -367,6 +389,56 @@ namespace GameOnSystem {
             DbTableModel_GroupParticipant? groupParticipant = GroupParticipants.FirstOrDefault(gp => gp.ID == groupID);
             if (groupParticipant != null) {
                 GroupParticipants.Remove(groupParticipant);
+                SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region Grades
+        public DbTableModel_Grade? GetGrade(int ID) {
+            return Grades.FirstOrDefault(g => g.ID == ID);
+        }
+        public List<DbTableModel_Grade> GetGrades() {
+            return Grades.ToList();
+        }
+        /*
+        public int ID { get; set; }
+        public int NumValue { get; set; }
+        public int GradeType { get; set; }
+        public string Comment { get; set; }
+        public int GroupId { get; set; }
+        public int UserCatId { get; set; }
+         */
+
+        public DbTableModel_Grade AddGrade(int numValue, string comment, int groupID, int userCatID, int? gradeType = null) {
+            if (gradeType == null) {
+                // Get the group and its editionID
+                DbTableModel_Group? group = this.GetGroup(groupID);
+                if (group != null) {
+                    // Get the edition by editionID and its GradeType
+                    DbTableModel_Edition? edition = this.GetEdition(group.EditionID);
+                    if (edition != null) {
+                        gradeType = edition.GradeType;
+                    }
+                }
+
+                if (gradeType == null) {
+                    throw new Exception("Unable to retrieve gradeType from group->edition!");
+                }
+            }
+
+            DbTableModel_Grade grade = new DbTableModel_Grade { NumValue = numValue, Comment = comment, GroupId = groupID, UserCatId = userCatID, GradeType = gradeType.Value };
+            Grades.Add(grade);
+            SaveChanges();
+            return grade;
+        }
+
+        public bool RemoveGrade(int gradeID) {
+            DbTableModel_Grade? grade = Grades.FirstOrDefault(g => g.ID == gradeID);
+            if (grade != null) {
+                Grades.Remove(grade);
                 SaveChanges();
                 return true;
             }

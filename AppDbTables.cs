@@ -6,6 +6,194 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameOnSystem {
+
+    internal static class DbTableHelper {
+        public static string GetGradeTypeName(int gradeType) {
+            switch (gradeType) {
+                case 1:
+                    return "Integers";
+                case 2:
+                    return "Letters A-F";
+                case 3:
+                    return "Letters A-Z";
+                case 4:
+                    return "Letters A-Ö";
+                case 5:
+                    return "Abbriv IG-MVG";
+                default:
+                    return "Unknown";
+            }
+        }
+
+        public static bool IsValidForType(int gradeType, int numValue, int? intMin = null, int? intMax = null) {
+            switch (gradeType) {
+                // Integers (i to i) {min-max-range: x > x}
+                case 1:
+                    if (intMin != null && intMax != null) {
+                        return numValue >= intMin && numValue <= intMax;
+                    }
+                    return true;
+                // Letters A-F {min-max-range: 0 > 5}
+                case 2:
+                    return numValue >= 0 && numValue <= 5;
+                // Letters A-Z {min-max-range: 0 > 25}
+                case 3:
+                    return numValue >= 0 && numValue <= 25;
+                // Letters A-Ö {min-max-range: 0 > 28}
+                case 4:
+                    return numValue >= 0 && numValue <= 28;
+                // Abbriv IG-MVG (IG, G, VG, MVG) {min-max-range: 0 > 3}
+                case 5:
+                    return numValue >= 0 && numValue <= 3;
+                // Unknown
+                default:
+                    return false;
+            }
+        }
+
+        public static string GetGradeAsString(int gradeType, int numValue) {
+            switch (gradeType) {
+                // Integers (i to i) {min-max-range: x > x}
+                case 1:
+                    return numValue.ToString();
+                // Letters A-F {min-max-range: 0 > 5}
+                case 2:
+                    if (numValue < 0 || numValue > 5) {
+                        return numValue.ToString();
+                    }
+                    return ((char)(numValue + 65)).ToString();
+
+                // Letters A-Z {min-max-range: 0 > 25}
+                case 3:
+                    if (numValue < 0 || numValue > 25) {
+                        return numValue.ToString();
+                    }
+                    return ((char)(numValue + 65)).ToString();
+                // Letters A-Ö {min-max-range: 0 > 28}
+                case 4:
+                    if (numValue < 0 || numValue > 28) {
+                        return numValue.ToString();
+                    }
+                    if (numValue < 26) {
+                        return ((char)(numValue + 65)).ToString();
+                    } else {
+                        switch (numValue) {
+                            case 26:
+                                return "Å";
+                            case 27:
+                                return "Ä";
+                            case 28:
+                                return "Ö";
+                            default:
+                                return numValue.ToString();
+                        }
+                    }
+
+                // Abbriv IG-MVG (IG, G, VG, MVG) {min-max-range: 0 > 3}
+                case 5:
+                    switch (numValue) {
+                        case 0:
+                            return "IG";
+                        case 1:
+                            return "G";
+                        case 2:
+                            return "VG";
+                        case 3:
+                            return "MVG";
+                        default:
+                            return numValue.ToString();
+                    }
+                // Unknown
+                default:
+                    return numValue.ToString();
+            }
+        }
+
+        public static int GetGradeFromString(int gradeType, string gradeString, int? defaultValue = null) {
+
+            int _defaultValue = 0;
+
+            List<string> az = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+            List<string> ao = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Å", "Ä", "Ö" };
+
+            if (defaultValue != null) {
+                _defaultValue = defaultValue.Value;
+            }
+
+            if (string.IsNullOrEmpty(gradeString)) {
+                return _defaultValue;
+            }
+            
+            if (gradeType < 1 || gradeType > 5) {
+                if (int.TryParse(gradeString, out int intValue)) {
+                    return intValue;
+                }
+                Debug.Print($"DBTableHelper.GetGradeFromString.Error: Unable to turn '{gradeString}' into int.");
+                return _defaultValue;
+            }
+
+            switch (gradeType) {
+                // Integers (i to i) {min-max-range: x > x}
+                case 1:
+                    if (int.TryParse(gradeString, out int intValue)) {
+                        return intValue;
+                    }
+                    return _defaultValue;
+                // Letters A-F {min-max-range: 0 > 5}
+                case 2:
+                    switch (gradeString.ToUpper()) {
+                        case "A":
+                            return 0;
+                        case "B":
+                            return 1;
+                        case "C":
+                            return 2;
+                        case "D":
+                            return 3;
+                        case "E":
+                            return 4;
+                        case "F":
+                            return 5;
+                        default:
+                            return _defaultValue;
+                    }
+
+                // Letters A-Z {min-max-range: 0 > 25}
+                case 3:
+                    if (az.Contains(gradeString.ToUpper())) {
+                        return az.IndexOf(gradeString.ToUpper());
+                    }
+                    return _defaultValue;
+
+                // Letters A-Ö {min-max-range: 0 > 28}
+                case 4:
+                    if (ao.Contains(gradeString.ToUpper())) {
+                        return ao.IndexOf(gradeString.ToUpper());
+                    }
+                    return _defaultValue;
+
+                // Abbriv IG-MVG (IG, G, VG, MVG) {min-max-range: 0 > 3}
+                case 5:
+                    switch (gradeString.ToUpper()) {
+                        case "IG":
+                            return 0;
+                        case "G":
+                            return 1;
+                        case "VG":
+                            return 2;
+                        case "MVG":
+                            return 3;
+                        default:
+                            return _defaultValue;
+                    }
+
+                // Unknown
+                default:
+                    return _defaultValue;
+            }
+        }
+    }
+
     internal class DbTableModel_Option {
         public int ID { get; set; }
         public string Field { get; set; }
@@ -105,10 +293,12 @@ namespace GameOnSystem {
             return categories;
         }
 
-        public void AddFocusCategory(AppDbContext appDbContext, int categoryID) {
+        public DbTableModel_UserCat AddFocusCategory(AppDbContext appDbContext, int categoryID) {
             // Add if not already
             if (!HasFocusCategory(appDbContext, categoryID)) {
-                appDbContext.AddUserCat(this.ID, categoryID);
+                return appDbContext.AddUserCat(this.ID, categoryID);
+            } else {
+                return appDbContext.UserCats.First(uc => uc.AppUserID == this.ID && uc.CategoryID == categoryID);
             }
         }
 
@@ -138,7 +328,8 @@ namespace GameOnSystem {
                 if (name != null) { this.Name = name; }
                 appDbContext.SaveChanges();
                 return true;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Debug.Print($"DbTableModel_Category.Update.Error: {e.Message}");
                 return false;
             }
@@ -177,6 +368,20 @@ namespace GameOnSystem {
             foreach (DbTableModel_UserCat userCat in userCats) {
                 appDbContext.RemoveUserCat(userCat.ID);
             }
+        }
+
+        public List<DbTableModel_Grade> GetGrades(AppDbContext appDbContext) {
+            return appDbContext.Grades.Where(g => g.GetUserCat(appDbContext).CategoryID == this.ID).ToList();
+        }
+
+        public int GetAverageGrade(AppDbContext appDbContext) {
+            List<DbTableModel_Grade> grades = GetGrades(appDbContext);
+            if (grades.Count == 0) { return 0; }
+            int sum = 0;
+            foreach (DbTableModel_Grade grade in grades) {
+                sum += grade.NumValue;
+            }
+            return sum / grades.Count;
         }
     }
 
@@ -248,7 +453,7 @@ namespace GameOnSystem {
         public void AddParticipant(AppDbContext appDbContext, int participantID) {
             // Add if not already
             if (!HasParticipant(appDbContext, participantID)) {
-                appDbContext.AddGroupParticipant(participantID, this.ID);
+                appDbContext.AddGroupParticipant(this.ID, participantID);
             }
         }
 
@@ -267,6 +472,51 @@ namespace GameOnSystem {
             }
         }
 
+        public List<DbTableModel_Grade> GetGrades(AppDbContext appDbContext) {
+            return appDbContext.Grades.Where(g => g.GroupId == this.ID).ToList();
+        }
+
+        public Dictionary<DbTableModel_Category, int> GetGradesPerCategory(AppDbContext appDbContext) { 
+            return GetGrades(appDbContext).GroupBy(g => g.GetCategory(appDbContext)).ToDictionary(g => g.Key, g => g.Sum(g => g.NumValue));
+        }
+
+        public Dictionary<DbTableModel_Category, int> GetAverageGradesPerCategory(AppDbContext appDbContext) {
+            return GetGrades(appDbContext).GroupBy(g => g.GetCategory(appDbContext)).ToDictionary(g => g.Key, g => g.Sum(g => g.NumValue) / g.Count());
+        }
+
+        // Gets the average grade using the average-per-category values
+        public double GetAverageGrade(AppDbContext appDbContext) {
+            Dictionary<DbTableModel_Category, int> averageGrades = GetAverageGradesPerCategory(appDbContext);
+            if (averageGrades.Count == 0) { return 0; }
+            int sum = 0;
+            foreach (KeyValuePair<DbTableModel_Category, int> averageGrade in averageGrades) {
+                sum += averageGrade.Value;
+            }
+            return sum / averageGrades.Count;
+        }
+
+        // Gets the average grade using the raw grade values
+        public double GetAverageGrade_NoCatAverages(AppDbContext appDbContext) {
+            List<DbTableModel_Grade> grades = GetGrades(appDbContext);
+            if (grades.Count == 0) { return 0; }
+            int sum = 0;
+            foreach (DbTableModel_Grade grade in grades) {
+                sum += grade.NumValue;
+            }
+            return sum / grades.Count;
+        }
+
+        public int GetAverageGradeRounded(AppDbContext appDbContext) {
+            return (int)Math.Round(GetAverageGrade(appDbContext));
+        }
+
+        public int GetAverageGradeRounded_NoCatAverages(AppDbContext appDbContext) {
+            return (int)Math.Round(GetAverageGrade_NoCatAverages(appDbContext));
+        }
+
+        public DbTableModel_Edition GetEdition(AppDbContext appDbContext) {
+            return appDbContext.Editions.First(e => e.ID == this.EditionID);
+        }
     }
 
     internal class DbTableModel_Participant {
@@ -396,7 +646,7 @@ namespace GameOnSystem {
             return appDbContext.UserCats.First(uc => uc.ID == this.UserCatId);
         }
 
-        public DbTableModel_AppUser GetUser(AppDbContext appDbContext) {
+        public DbTableModel_AppUser GetAppUser(AppDbContext appDbContext) {
             return appDbContext.AppUsers.First(u => u.ID == GetUserCat(appDbContext).AppUserID);
         }
 
@@ -405,101 +655,19 @@ namespace GameOnSystem {
         }
 
         public string GetGradeTypeName() {
-            switch (this.GradeType) {
-                case 1:
-                    return "Integers";
-                case 2:
-                    return "Letters A-F";
-                case 3:
-                    return "Letters A-Z";
-                case 4:
-                    return "Letters A-Ö";
-                case 5:
-                    return "Abbriv IG-MVG";
-                default:
-                    return "Unknown";
-            }
+            return DbTableHelper.GetGradeTypeName(this.GradeType);
         }
 
-        public bool IsValidForType(int numValue) {
-            switch (this.GradeType) {
-                // Integers (i to i) {min-max-range: x > x}
-                case 1:
-                    return true;
-                // Letters A-F {min-max-range: 0 > 5}
-                case 2:
-                    return numValue >= 0 && numValue <= 5;
-                // Letters A-Z {min-max-range: 0 > 25}
-                case 3:
-                    return numValue >= 0 && numValue <= 25;
-                // Letters A-Ö {min-max-range: 0 > 28}
-                case 4:
-                    return numValue >= 0 && numValue <= 28;
-                // Abbriv IG-MVG (IG, G, VG, MVG) {min-max-range: 0 > 3}
-                case 5:
-                    return numValue >= 0 && numValue <= 3;
-                // Unknown
-                default:
-                    return false;
+        public bool IsValidForType(int numValue, bool checkEditionMinMax = false, AppDbContext? appDbContext = null) {
+            if (checkEditionMinMax && appDbContext != null) {
+                DbTableModel_Edition edition = GetGroup(appDbContext).GetEdition(appDbContext);
+                return DbTableHelper.IsValidForType(this.GradeType, numValue, edition.GradeMin, edition.GradeMax);
             }
+            return DbTableHelper.IsValidForType(this.GradeType, numValue);
         }
 
         public string GetGradeAsString() {
-            switch (this.GradeType) {
-                // Integers (i to i) {min-max-range: x > x}
-                case 1:
-                    return this.NumValue.ToString();
-                // Letters A-F {min-max-range: 0 > 5}
-                case 2:
-                    if (this.NumValue < 0 || this.NumValue > 5) {
-                        return "Unknown";
-                    }
-                    return ((char)(this.NumValue + 65)).ToString();
-
-                // Letters A-Z {min-max-range: 0 > 25}
-                case 3:
-                    if (this.NumValue < 0 || this.NumValue > 25) {
-                        return "Unknown";
-                    }
-                    return ((char)(this.NumValue + 65)).ToString();
-                // Letters A-Ö {min-max-range: 0 > 28}
-                case 4:
-                    if (this.NumValue < 0 || this.NumValue > 28) {
-                        return "Unknown";
-                    }
-                    if (this.NumValue < 26) {
-                        return ((char)(this.NumValue + 65)).ToString();
-                    } else {
-                        switch (this.NumValue) {
-                            case 26:
-                                return "Å";
-                            case 27:
-                                return "Ä";
-                            case 28:
-                                return "Ö";
-                            default:
-                                return "Unknown";
-                        }
-                    }
-                
-                // Abbriv IG-MVG (IG, G, VG, MVG) {min-max-range: 0 > 3}
-                case 5:
-                    switch (this.NumValue) {
-                        case 0:
-                            return "IG";
-                        case 1:
-                            return "G";
-                        case 2:
-                            return "VG";
-                        case 3:
-                            return "MVG";
-                        default:
-                            return "Unknown";
-                    }
-                // Unknown
-                default:
-                    return "Unknown";
-            }
+            return DbTableHelper.GetGradeAsString(this.GradeType, this.NumValue);
         }
     }
 }

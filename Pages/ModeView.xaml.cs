@@ -27,12 +27,13 @@ namespace GameOnSystem.Pages {
             this.windowInstance = WindowInstance;
             this.sendingView = SendingView;
 
-            windowInstance.Title = windowInstance.Shared.coreTitle + " | Select Mode";
-
             InitializeComponent();
         }
 
         private void InitDatabaseValues() {
+
+            // Editions
+
             DbTableModel_Edition go2023 = windowInstance.Shared.appDbContext.AddEdition(
                 "GameOn 2023",            // Name
                 "???",                    // Theme
@@ -48,10 +49,12 @@ namespace GameOnSystem.Pages {
                 "Reflections",            // Theme
                 1,                        // GradeMin
                 6,                        // GradeMax
-                1,                        // GradeType
+                5,                        // GradeType
                 true,                     // IsActive
                 new DateTime(2024, 3, 12) // GradingDeadline
             );
+
+            // Categories
 
             DbTableModel_Category entertainment = windowInstance.Shared.appDbContext.AddCategory("Underhållning");
             DbTableModel_Category theme_keeping = windowInstance.Shared.appDbContext.AddCategory("Uppfyllande av tema");
@@ -61,12 +64,16 @@ namespace GameOnSystem.Pages {
             DbTableModel_Category physics_math_implementation = windowInstance.Shared.appDbContext.AddCategory("Implementering av fysik / matematik");
             DbTableModel_Category playability = windowInstance.Shared.appDbContext.AddCategory("Spelbarhet");
 
+            // AppUsers
+
             DbTableModel_AppUser user1 = windowInstance.Shared.appDbContext.AddAppUser("AppUser1", "user1@example.com", "user1", false);
-            user1.AddFocusCategory(windowInstance.Shared.appDbContext, entertainment.ID);
-            user1.AddFocusCategory(windowInstance.Shared.appDbContext, physics_math_implementation.ID);
+            DbTableModel_UserCat user1_entertainment = user1.AddFocusCategory(windowInstance.Shared.appDbContext, entertainment.ID);
+            DbTableModel_UserCat user1_phymath = user1.AddFocusCategory(windowInstance.Shared.appDbContext, physics_math_implementation.ID);
             DbTableModel_AppUser user2 = windowInstance.Shared.appDbContext.AddAppUser("AppUser2", "user2@example.com", "user2", false);
-            user2.AddFocusCategory(windowInstance.Shared.appDbContext, code_structure_and_docs.ID);
-            user2.AddFocusCategory(windowInstance.Shared.appDbContext, playability.ID);
+            DbTableModel_UserCat user2_codestrcdocs = user2.AddFocusCategory(windowInstance.Shared.appDbContext, code_structure_and_docs.ID);
+            DbTableModel_UserCat user2_playability = user2.AddFocusCategory(windowInstance.Shared.appDbContext, playability.ID);
+
+            // Participants
 
             DbTableModel_Participant participant1 = windowInstance.Shared.appDbContext.AddParticipant("Participant 1");
             DbTableModel_Participant participant2 = windowInstance.Shared.appDbContext.AddParticipant("Participant 2");
@@ -81,6 +88,7 @@ namespace GameOnSystem.Pages {
             DbTableModel_Participant participant11 = windowInstance.Shared.appDbContext.AddParticipant("Participant 11"); // Unasigned in example
             DbTableModel_Participant participant12 = windowInstance.Shared.appDbContext.AddParticipant("Participant 12"); // Unasigned in example
 
+            // Groups
 
             DbTableModel_Group go2024_group1 = windowInstance.Shared.appDbContext.AddGroup(
                 "Grupp 1",
@@ -155,6 +163,43 @@ namespace GameOnSystem.Pages {
             );
             go2024_group8.AddParticipant(windowInstance.Shared.appDbContext, participant8.ID);
             go2024_group8.AddParticipant(windowInstance.Shared.appDbContext, participant10.ID);
+
+            // Grades
+            windowInstance.Shared.appDbContext.AddGrade(
+                1,
+                "",
+                go2024_group1.ID,
+                user1_entertainment.ID,
+                go2024.GradeType
+            );
+            windowInstance.Shared.appDbContext.AddGrade(
+                1,
+                "   ",
+                go2024_group2.ID,
+                user2_codestrcdocs.ID,
+                go2024.GradeType
+            );
+            windowInstance.Shared.appDbContext.AddGrade(
+                2,
+                "Comment",
+                go2024_group3.ID,
+                user1_phymath.ID,
+                go2024.GradeType
+            );
+            windowInstance.Shared.appDbContext.AddGrade(
+                3,
+                "This is a longer comment because why not",
+                go2024_group1.ID,
+                user2_codestrcdocs.ID,
+                go2024.GradeType
+            );
+            windowInstance.Shared.appDbContext.AddGrade(
+                4,
+                "",
+                go2024_group4.ID,
+                user2_playability.ID,
+                go2024.GradeType
+            );
         }
 
         private async void ModeSelectExternal(object sender, RoutedEventArgs e) {

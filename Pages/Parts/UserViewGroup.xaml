@@ -18,20 +18,53 @@
                 <Grid Grid.Column="0" x:Name="GameLeftWrapper">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.8*"/>
-                        <RowDefinition Height="0.3*" x:Name="GameLeftWrapperTitleSegment"/>
+                        <RowDefinition Height="40" x:Name="GameLeftWrapperTitleSegment"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <ContentControl Grid.Row="0" x:Name="GroupGamePresentWrapper" Visibility="Visible"></ContentControl>
+                    <ContentControl Grid.Row="0" x:Name="GroupGamePresentWrapper" Visibility="Visible">
+                        <Grid x:Name="ImageWrapper" MouseEnter="ImageWrapper_MouseEnter" MouseLeave="ImageWrapper_MouseLeave">
+                            
+                            <Image x:Name="GameImage" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="1" x:Name="GroupTitle" Text="Loading..." FontSize="24" LayoutUpdated="GroupTitle_LayoutUpdated"/>
+                            <!-- Play Button - Initially hidden-->
+                            <Button x:Name="PlayButton" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50" Background="Transparent" BorderBrush="Transparent" Click="PlayButton_Click">
+                                <Button.Content>
+                                    <Canvas Width="50" Height="50">
+                                        <Canvas.RenderTransform>
+                                            <ScaleTransform ScaleX="0.1225" ScaleY="0.1225" />
+                                        </Canvas.RenderTransform>
+                                        <Canvas Width="408.22" Height="408.22" Style="{DynamicResource PlayButton}">
+                                            <Path x:Name="PlayButtonPath" Fill="White" Data="M204.11,0C91.388,0,0,91.388,0,204.111c0,112.725,91.388,204.11,204.11,204.11c112.729,0,204.11-91.385,204.11-204.11C408.221,91.388,316.839,0,204.11,0z M286.547,229.971l-126.368,72.471c-17.003,9.75-30.781,1.763-30.781-17.834V140.012c0-19.602,13.777-27.575,30.781-17.827l126.368,72.466C303.551,204.403,303.551,220.217,286.547,229.971z" />
+                                            <Path x:Name="PlayButtonInnerPath" Fill="Black" Opacity="0.2" Data="M286.547,229.971l-126.368,72.471c-17.003,9.75-30.781,1.763-30.781-17.834V140.012c0-19.602,13.777-27.575,30.781-17.827l126.368,72.466C303.551,204.403,303.551,220.217,286.547,229.971z" />
+                                        </Canvas>
+                                    </Canvas>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </ContentControl>
 
-                    <TextBlock Grid.Row="2" x:Name="GroupMembers" Text="Loading..." FontSize="16" Style="{StaticResource GrayedOutTextBlock}"></TextBlock>
+                    <Grid x:Name="GroupTitleWrapper" Grid.Row="1" Margin="0,0,10,0">
+                        <TextBlock x:Name="GroupTitle" Text="Loading..." FontSize="24" LayoutUpdated="GroupTitle_LayoutUpdated"/>
+                    </Grid>
+                    <StackPanel Grid.Row="2">
+                        <TextBlock Text="Group Members:" FontSize="16" Style="{StaticResource GrayedOutTextBlock}"></TextBlock>
+                        <TextBlock x:Name="GroupMembers" Text="Loading..." FontSize="16" Style="{StaticResource GrayedOutTextBlock}" ></TextBlock>
+                    </StackPanel>
                 </Grid>
 
                 <Rectangle Fill="#343434" Grid.Column="1"/>
 
-                <ScrollViewer Grid.Column="2" ></ScrollViewer>
+                <Grid Grid.Column="2" Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer x:Name="GradingSpace" Grid.Row="0">
+                        <StackPanel x:Name="GroupGradesList"></StackPanel>
+                    </ScrollViewer>
+                    <ContentControl x:Name="GroupTotalGradeSpace" Grid.Row="1"/>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

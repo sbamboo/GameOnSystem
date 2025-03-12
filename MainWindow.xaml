@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GameOnSystem"
         mc:Ignorable="d"
         Title="GameOnSystem" Height="550" Width="1020"
-        Style="{StaticResource WindowStyle}">
+        Style="{StaticResource WindowStyle}"
+        Icon="pack://application:,,,/Assets/LogoBlack.png">
     <Grid>
         <ContentControl x:Name="MainContent"></ContentControl>
     </Grid>

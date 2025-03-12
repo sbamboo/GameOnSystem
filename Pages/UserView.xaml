@@ -58,11 +58,10 @@
 
             <Rectangle Fill="#343434" Grid.Column="1"/>
 
-            <StackPanel x:Name="GroupContentHoldingWrapper" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Stretch">
-                <TextBlock x:Name="NoSelectedGroupText" Text="Loading..." FontSize="15" Width="Auto" TextAlignment="Center" Margin="0,40,0,0" Style="{StaticResource GrayedOutTextBlock}"/>
-                <ContentControl x:Name="GroupContentHolder"></ContentControl>
-            </StackPanel>
-
+            <Grid x:Name="GroupContentHoldingWrapper" Grid.Column="2" VerticalAlignment="Stretch">
+                <TextBlock x:Name="NoSelectedGroupText" Text="Loading..." FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" Style="{StaticResource GrayedOutTextBlock}"/>
+                <ContentControl x:Name="GroupContentHolder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Grid>
 
         </Grid>
     </Grid>

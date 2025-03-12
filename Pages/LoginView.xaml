@@ -11,10 +11,13 @@
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Vertical" Width="350">
                     <TextBlock Text="Login" FontSize="30" HorizontalAlignment="Center"/>
+                    
                     <TextBlock Text="Email" FontSize="15"/>
-                    <TextBox x:Name="LoginViewEmailBox" Width="350" FontSize="16"/>
+                    <TextBox x:Name="LoginViewEmailBox" Width="350" FontSize="16" KeyDown="Login_InputField_KeyDown"/>
+                    
                     <TextBlock Text="Password" FontSize="15" Margin="0,20,0,0"/>
-                    <PasswordBox x:Name="LoginViewPasswordBox" Width="350" FontSize="16"/>
+                    <PasswordBox x:Name="LoginViewPasswordBox" Width="350" FontSize="16" KeyDown="Login_InputField_KeyDown"/>
+                    
                     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0">
                         <Button Width="100" Height="30" FontSize="15" Margin="0,0,10,0" Click="LoginViewDisconnect">
                             <Button.Content>

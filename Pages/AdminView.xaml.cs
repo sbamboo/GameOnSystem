@@ -26,12 +26,6 @@ namespace GameOnSystem.Pages {
             this.windowInstance = WindowInstance;
             this.sendingView = SendingView;
 
-            if (windowInstance.Shared.appDbIsUsingSqlite) {
-                windowInstance.Title = windowInstance.Shared.coreTitle + " | AdminView | Local database";
-            } else {
-                windowInstance.Title = windowInstance.Shared.coreTitle + $" | AdminView | Connected to {SecretConfig.ExternalDbAdress}";
-            }
-
             InitializeComponent();
         }
 

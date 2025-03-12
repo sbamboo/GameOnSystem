@@ -26,16 +26,16 @@ namespace GameOnSystem.Pages {
             this.windowInstance = WindowInstance;
             this.sendingView = SendingView;
 
-            if (windowInstance.Shared.appDbIsUsingSqlite) {
-                windowInstance.Title = windowInstance.Shared.coreTitle + " | Login | Local database";
-            } else {
-                windowInstance.Title = windowInstance.Shared.coreTitle + $" | Login | Connected to {SecretConfig.ExternalDbAdress}";
-            }
-
             InitializeComponent();
 
             LoginViewEmailBox.Text = "";
             LoginViewPasswordBox.Password = "";
+
+            // Focus email field and begin typing
+            this.Loaded += (s, e) => {
+                LoginViewEmailBox.Focus();
+            };
+
         }
 
         private void LoginViewDisconnect(object sender, RoutedEventArgs e) {
@@ -83,6 +83,17 @@ namespace GameOnSystem.Pages {
             catch (Exception ex) {
                 LoginViewInfoText.Text = ex.Message;
                 return;
+            }
+        }
+
+        private void Login_InputField_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                // If sender is email field, focus password field else prompt login
+                if (sender == LoginViewEmailBox) {
+                    LoginViewPasswordBox.Focus();
+                } else {
+                    LoginViewLogin(sender, e);
+                }
             }
         }
     }
