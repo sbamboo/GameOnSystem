@@ -42,6 +42,7 @@ namespace GameOnSystem {
         private TextBlock categoryTitle;
         private ScrollViewer innerScrollViewer;
         private StackPanel innerStackPanel;
+        private TextBlock informationText;
 
         public Border Border { get { return this.border; } }
         public ScrollViewer ScrollViewer { get { return this.scrollViewer; } }
@@ -49,6 +50,7 @@ namespace GameOnSystem {
         public TextBlock CategoryTitle { get { return this.categoryTitle; } }
         public ScrollViewer InnerScrollViewer { get { return this.innerScrollViewer; } }
         public StackPanel InnerStackPanel { get { return this.innerStackPanel; } }
+        public TextBlock InformationText { get { return this.informationText; } }
 
 
         internal UITools_GroupGradeCategory(DbTableModel_Category Category) {
@@ -95,6 +97,14 @@ namespace GameOnSystem {
                 Orientation = Orientation.Vertical
             };
             this.innerScrollViewer.Content = this.innerStackPanel;
+
+            // Create the information textblock
+            this.informationText = new TextBlock {
+                Text = "",
+                FontSize = 12,
+                Visibility = System.Windows.Visibility.Collapsed
+            };
+            this.outerStackPanel.Children.Add(this.informationText);
         }
     }
 
@@ -106,5 +116,6 @@ namespace GameOnSystem {
         public bool numValueIsEnabled;
         public TextBox valueBox;
         public TextBox commentBox;
+        public UITools_GroupGradeCategory categoryUiTools;
     }
 }

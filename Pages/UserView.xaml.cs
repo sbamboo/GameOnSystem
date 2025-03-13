@@ -66,7 +66,7 @@ namespace GameOnSystem.Pages {
                 return;
             } else {
                 GroupSidebarText.Text = "Select group:";
-                NoSelectedGroupText.Text = "Click a group on the side to view it.";
+                NoSelectedGroupText.Text = "Click a group in the sidebar to view it.";
             }
 
             // Get groups and instantiate buttons under sidebar

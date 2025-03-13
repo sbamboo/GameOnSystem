@@ -93,6 +93,7 @@ namespace GameOnSystem.Pages.Parts {
              *                             </DockPanel>
              *                         </Border>
              *                     </StackPanel>
+             *                     <TextBlock:Collapsed></TextBlock>
              *                 </StackPanel>
              *             </ScrollViewer>
              *         </Border>
@@ -187,7 +188,11 @@ namespace GameOnSystem.Pages.Parts {
                     // Else show the input fields
                     } else {
                         // Add the save button
-                        Button gradeSaveButton = new Button();
+                        Button gradeSaveButton = new Button {
+                            Content = "Save",
+                            FontSize = 15
+                        };
+                        /*
                         // Set content to textblock containg "Save"
                         TextBlock gradeSaveButtonText = new TextBlock {
                             Text = "Save",
@@ -195,6 +200,7 @@ namespace GameOnSystem.Pages.Parts {
                         };
                         gradeSaveButtonText.Style = (Style)FindResource("StdTextBlock");
                         gradeSaveButton.Content = gradeSaveButtonText;
+                        */
                         gradeSaveButton.IsEnabled = false;
                         entryDockPanel.Children.Add(gradeSaveButton);
 
@@ -253,13 +259,13 @@ namespace GameOnSystem.Pages.Parts {
                         if (gradeUserCat != null) { // Null if for some reason the user does not have a usercat for the category
                             gradeSaveButton.IsEnabled = true;
                             gradeSaveButton.Tag = new UITools_GroupGradeSaveButtonTag {
-                                buttonText = gradeSaveButtonText,
                                 groupID = group.ID,
                                 userCatID = (int)gradeUserCat,
                                 edition = edition,
                                 numValueIsEnabled = !gradeCommentAfterDeadline,
                                 valueBox = grade_value,
-                                commentBox = grade_comment
+                                commentBox = grade_comment,
+                                categoryUiTools = categoryStackPanels[category]
                             };
                             gradeSaveButton.Click += GradeSave_Click;
                         }
@@ -520,6 +526,7 @@ namespace GameOnSystem.Pages.Parts {
             bool numValueIsEnabled = tag.numValueIsEnabled;
             string gradeValue = tag.valueBox.Text;
             string gradeComment = tag.commentBox.Text;
+            UITools_GroupGradeCategory uITools_GroupGradeCategory = tag.categoryUiTools;
 
             int gradeIntValue = -1;
 
@@ -527,20 +534,29 @@ namespace GameOnSystem.Pages.Parts {
             if (numValueIsEnabled) {
                 // Check if the gradeValue is empty
                 if (string.IsNullOrEmpty(gradeValue)) {
-                    gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    //gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    uITools_GroupGradeCategory.InformationText.Style = (Style)FindResource("RedNoticeText");
+                    uITools_GroupGradeCategory.InformationText.Text = "Grade value cannot be empty!";
+                    uITools_GroupGradeCategory.InformationText.Visibility = Visibility.Visible;
                     return;
                 }
 
                 gradeIntValue = DbTableHelper.GetGradeFromString(edition.GradeType, gradeValue, -1, edition.GradeMin, edition.GradeMax);
                 // If the gradeIntValue is -1, the gradeValue was not able to be parsed
                 if (gradeIntValue == -1) {
-                    gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    //gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    uITools_GroupGradeCategory.InformationText.Style = (Style)FindResource("RedNoticeText");
+                    uITools_GroupGradeCategory.InformationText.Text = "Invalid grade value! (UnParsable)";
+                    uITools_GroupGradeCategory.InformationText.Visibility = Visibility.Visible;
                     return;
                 }
 
                 // Validate the gradeValue
                 if(!DbTableHelper.IsValidForType(edition.GradeType, gradeIntValue, edition.GradeMin, edition.GradeMax)) {
-                    gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    //gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    uITools_GroupGradeCategory.InformationText.Style = (Style)FindResource("RedNoticeText");
+                    uITools_GroupGradeCategory.InformationText.Text = "Invalid grade value!";
+                    uITools_GroupGradeCategory.InformationText.Visibility = Visibility.Visible;
                     return;
                 }
             }
@@ -559,11 +575,19 @@ namespace GameOnSystem.Pages.Parts {
             );
 
             // Disable button and inputs and set button foreground to green
-            senderButton.Content = "✓";
-            gradeSaveButtonText.Style = (Style)FindResource("GreenNoticeText");
-            senderButton.IsEnabled = false;
-            tag.valueBox.IsEnabled = false;
-            tag.commentBox.IsEnabled = false;
+            Dispatcher.Invoke(() => {
+                senderButton.Content = "✓";
+                //gradeSaveButtonText.Style = (Style)FindResource("GreenNoticeText");
+                senderButton.Style = (Style)FindResource("GreenableButton");
+                uITools_GroupGradeCategory.InformationText.Style = (Style)FindResource("StdTextBlock");
+                uITools_GroupGradeCategory.InformationText.Text = "";
+            });
+            Dispatcher.Invoke(() => {
+                uITools_GroupGradeCategory.InformationText.Visibility = Visibility.Collapsed;
+                senderButton.IsEnabled = false;
+                tag.valueBox.IsEnabled = false;
+                tag.commentBox.IsEnabled = false;
+            });
         }
     }
 }
