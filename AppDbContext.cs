@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -74,6 +75,33 @@ namespace GameOnSystem {
                     SaveChanges();
                 }
             }
+
+            // Add created
+            if (!this.HasOption("created")) {
+                this.SetOption("created", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+
+            // Add creation metadata
+            if (!this.HasOption("created.DotNet")) {
+                this.SetOption("created.DotNet", Environment.Version.ToString());
+            }
+            if (!this.HasOption("created.Microsoft_EntityFrameworkCore")) {
+                this.SetOption("created.Microsoft_EntityFrameworkCore", GetAssemblyVersion("Microsoft.EntityFrameworkCore"));
+            }
+            if (!this.HasOption("created.Pomelo_EntityFrameworkCore_MySql")) {
+                this.SetOption("created.Pomelo_EntityFrameworkCore_MySql", GetAssemblyVersion("Pomelo.EntityFrameworkCore.MySql"));
+            }
+        }
+
+        static string GetAssemblyVersion(string assemblyName) {
+            try {
+                // Load the assembly by its name and get the version
+                var assembly = Assembly.Load(new AssemblyName(assemblyName));
+                return assembly.GetName().Version.ToString();
+            }
+            catch (Exception) {
+                return $"{assemblyName} not found";
+            }
         }
 
         public void EnsureDbTables() {
@@ -81,7 +109,7 @@ namespace GameOnSystem {
         }
 
         public void ClearDbTables() {
-            // Disable foreign key constraints for safety
+            // Disable foreign key constraints
             Database.ExecuteSqlRaw("SET FOREIGN_KEY_CHECKS = 0;");
 
             // Drop each table
@@ -100,10 +128,10 @@ namespace GameOnSystem {
         }
 
         public void ClearDbEntries() {
-            // Disable foreign key constraints for safety
+            // Disable foreign key constraints
             Database.ExecuteSqlRaw("SET FOREIGN_KEY_CHECKS = 0;");
 
-            // Truncate each table (more efficient than DELETE FROM)
+            // Truncate each table
             Database.ExecuteSqlRaw($"TRUNCATE TABLE `{nameof(Options)}`");
             Database.ExecuteSqlRaw($"TRUNCATE TABLE `{nameof(Editions)}`");
             Database.ExecuteSqlRaw($"TRUNCATE TABLE `{nameof(AppUsers)}`");
@@ -403,14 +431,6 @@ namespace GameOnSystem {
         public List<DbTableModel_Grade> GetGrades() {
             return Grades.ToList();
         }
-        /*
-        public int ID { get; set; }
-        public int NumValue { get; set; }
-        public int GradeType { get; set; }
-        public string Comment { get; set; }
-        public int GroupId { get; set; }
-        public int UserCatId { get; set; }
-         */
 
         public DbTableModel_Grade AddGrade(int numValue, string comment, int groupID, int userCatID, int? gradeType = null) {
             if (gradeType == null) {

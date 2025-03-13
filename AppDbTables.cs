@@ -7,7 +7,23 @@ using System.Threading.Tasks;
 
 namespace GameOnSystem {
 
+    /// <summary>
+    /// Helper class for managing data in and out of the database. (Ex. GradeTypes)
+    /// </summary>
     internal static class DbTableHelper {
+
+        /*
+         * NumGradeType:
+         *   1 = "Integers" (i to i) {min-max-range: x > x}
+         *   2 = "Letters A-F"       {min-max-range: 0 > 5}
+         *   3 = "Letters A-Z"       {min-max-range: 0 > 25}
+         *   4 = "Letters A-Ö"       {min-max-range: 0 > 28}
+         *   5 = "Abbriv IG-MVG" (IG, G, VG, MVG) {min-max-range: 0 > 3}
+         *   
+         * When changing the GradeType the admin defined value will be reset,
+         *   and for types other then "Integers" min/max are auto filled.
+        */
+
         public static string GetGradeTypeName(int gradeType) {
             switch (gradeType) {
                 case 1:
@@ -109,7 +125,7 @@ namespace GameOnSystem {
             }
         }
 
-        public static int GetGradeFromString(int gradeType, string gradeString, int? defaultValue = null) {
+        public static int GetGradeFromString(int gradeType, string gradeString, int? defaultValue = null, int? intMin = null, int? intMax = null) {
 
             int _defaultValue = 0;
 
@@ -126,6 +142,12 @@ namespace GameOnSystem {
             
             if (gradeType < 1 || gradeType > 5) {
                 if (int.TryParse(gradeString, out int intValue)) {
+                    // If min/max was given check so value is within range and if not return default
+                    if (intMin != null && intMax != null) {
+                        if (intValue < intMin || intValue > intMax) {
+                            return _defaultValue;
+                        }
+                    }
                     return intValue;
                 }
                 Debug.Print($"DBTableHelper.GetGradeFromString.Error: Unable to turn '{gradeString}' into int.");
@@ -194,6 +216,9 @@ namespace GameOnSystem {
         }
     }
 
+    /// <summary>
+    /// Table for storing application options (mostly internal), versioning metadata and database state.
+    /// </summary>
     internal class DbTableModel_Option {
         public int ID { get; set; }
         public string Field { get; set; }
@@ -206,17 +231,6 @@ namespace GameOnSystem {
         public string Theme { get; set; }
         public int GradeMin { get; set; }
         public int GradeMax { get; set; }
-        /*
-         * NumGradeType:
-         *   1 = "Integers" (i to i) {min-max-range: x > x}
-         *   2 = "Letters A-F"       {min-max-range: 0 > 5}
-         *   3 = "Letters A-Z"       {min-max-range: 0 > 25}
-         *   4 = "Letters A-Ö"       {min-max-range: 0 > 28}
-         *   5 = "Abbriv IG-MVG" (IG, G, VG, MVG) {min-max-range: 0 > 3}
-         *   
-         * When changing the GradeType the admin defined value will be reset,
-         *   and for types other then "Integers" min/max are auto filled.
-        */
         public int GradeType { get; set; }
         public bool IsActive { get; set; }
         public DateTime? GradingDeadline { get; set; }
@@ -281,7 +295,7 @@ namespace GameOnSystem {
         }
 
         public bool HasFocusCategory(AppDbContext appDbContext, int categoryID) {
-            return appDbContext.UserCats.Any(uc => uc.CategoryID == categoryID);
+            return appDbContext.UserCats.Any(uc => uc.AppUserID == this.ID && uc.CategoryID == categoryID);
         }
 
         public List<DbTableModel_Category> GetFocusCategories(AppDbContext appDbContext) {
@@ -294,12 +308,15 @@ namespace GameOnSystem {
         }
 
         public DbTableModel_UserCat AddFocusCategory(AppDbContext appDbContext, int categoryID) {
+
+            DbTableModel_UserCat? foundCategory = appDbContext.UserCats.FirstOrDefault(uc => uc.AppUserID == this.ID && uc.CategoryID == categoryID);
+
             // Add if not already
-            if (!HasFocusCategory(appDbContext, categoryID)) {
+            if (foundCategory == null) {
                 return appDbContext.AddUserCat(this.ID, categoryID);
-            } else {
-                return appDbContext.UserCats.First(uc => uc.AppUserID == this.ID && uc.CategoryID == categoryID);
             }
+
+            return foundCategory;
         }
 
         public void RemoveFocusCategory(AppDbContext appDbContext, int categoryID) {
@@ -315,6 +332,14 @@ namespace GameOnSystem {
             foreach (DbTableModel_UserCat userCat in userCats) {
                 appDbContext.RemoveUserCat(userCat.ID);
             }
+        }
+
+        public int? GetUserCatForFocusCategory(AppDbContext appDbContext, int categoryID) {
+            DbTableModel_UserCat? userCat = appDbContext.UserCats.FirstOrDefault(uc => uc.AppUserID == this.ID && uc.CategoryID == categoryID);
+            if (userCat == null) {
+                return null;
+            }
+            return userCat.ID;
         }
     }
 
@@ -375,7 +400,8 @@ namespace GameOnSystem {
         }
 
         public int GetAverageGrade(AppDbContext appDbContext) {
-            List<DbTableModel_Grade> grades = GetGrades(appDbContext);
+            List<DbTableModel_Grade> grades = GetGrades(appDbContext).Where(g => g.NumValue != -1).ToList();
+
             if (grades.Count == 0) { return 0; }
             int sum = 0;
             foreach (DbTableModel_Grade grade in grades) {
@@ -477,11 +503,11 @@ namespace GameOnSystem {
         }
 
         public Dictionary<DbTableModel_Category, int> GetGradesPerCategory(AppDbContext appDbContext) { 
-            return GetGrades(appDbContext).GroupBy(g => g.GetCategory(appDbContext)).ToDictionary(g => g.Key, g => g.Sum(g => g.NumValue));
+            return GetGrades(appDbContext).Where(g => g.NumValue != -1).GroupBy(g => g.GetCategory(appDbContext)).ToDictionary(g => g.Key, g => g.Sum(g => g.NumValue));
         }
 
         public Dictionary<DbTableModel_Category, int> GetAverageGradesPerCategory(AppDbContext appDbContext) {
-            return GetGrades(appDbContext).GroupBy(g => g.GetCategory(appDbContext)).ToDictionary(g => g.Key, g => g.Sum(g => g.NumValue) / g.Count());
+            return GetGrades(appDbContext).Where(g => g.NumValue != -1).GroupBy(g => g.GetCategory(appDbContext)).ToDictionary(g => g.Key, g => g.Sum(g => g.NumValue) / g.Count());
         }
 
         // Gets the average grade using the average-per-category values
@@ -497,7 +523,7 @@ namespace GameOnSystem {
 
         // Gets the average grade using the raw grade values
         public double GetAverageGrade_NoCatAverages(AppDbContext appDbContext) {
-            List<DbTableModel_Grade> grades = GetGrades(appDbContext);
+            List<DbTableModel_Grade> grades = GetGrades(appDbContext).Where(g => g.NumValue != -1).ToList();
             if (grades.Count == 0) { return 0; }
             int sum = 0;
             foreach (DbTableModel_Grade grade in grades) {

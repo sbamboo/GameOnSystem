@@ -49,9 +49,9 @@ namespace GameOnSystem.Pages {
                 "Reflections",            // Theme
                 1,                        // GradeMin
                 6,                        // GradeMax
-                5,                        // GradeType
+                1,                        // GradeType
                 true,                     // IsActive
-                new DateTime(2024, 3, 12) // GradingDeadline
+                new DateTime(2026, 3, 12) // GradingDeadline
             );
 
             // Categories
@@ -68,10 +68,13 @@ namespace GameOnSystem.Pages {
 
             DbTableModel_AppUser user1 = windowInstance.Shared.appDbContext.AddAppUser("AppUser1", "user1@example.com", "user1", false);
             DbTableModel_UserCat user1_entertainment = user1.AddFocusCategory(windowInstance.Shared.appDbContext, entertainment.ID);
-            DbTableModel_UserCat user1_phymath = user1.AddFocusCategory(windowInstance.Shared.appDbContext, physics_math_implementation.ID);
+            DbTableModel_UserCat user1_phymath       = user1.AddFocusCategory(windowInstance.Shared.appDbContext, physics_math_implementation.ID);
+            DbTableModel_UserCat user1_theme_keeping = user1.AddFocusCategory(windowInstance.Shared.appDbContext, theme_keeping.ID);
+
             DbTableModel_AppUser user2 = windowInstance.Shared.appDbContext.AddAppUser("AppUser2", "user2@example.com", "user2", false);
-            DbTableModel_UserCat user2_codestrcdocs = user2.AddFocusCategory(windowInstance.Shared.appDbContext, code_structure_and_docs.ID);
-            DbTableModel_UserCat user2_playability = user2.AddFocusCategory(windowInstance.Shared.appDbContext, playability.ID);
+            DbTableModel_UserCat user2_codestrcdocs  = user2.AddFocusCategory(windowInstance.Shared.appDbContext, code_structure_and_docs.ID);
+            DbTableModel_UserCat user2_playability   = user2.AddFocusCategory(windowInstance.Shared.appDbContext, playability.ID);
+            DbTableModel_UserCat user2_theme_keeping = user2.AddFocusCategory(windowInstance.Shared.appDbContext, theme_keeping.ID);
 
             // Participants
 
@@ -200,6 +203,13 @@ namespace GameOnSystem.Pages {
                 user2_playability.ID,
                 go2024.GradeType
             );
+            windowInstance.Shared.appDbContext.AddGrade(
+                3,
+                "",
+                go2024_group5.ID,
+                user2_theme_keeping.ID,
+                go2024.GradeType
+            );
         }
 
         private async void ModeSelectExternal(object sender, RoutedEventArgs e) {
@@ -226,7 +236,7 @@ namespace GameOnSystem.Pages {
 
             await Task.Run(() => {
                 try {
-                    windowInstance.Shared.appDbContext = new AppDbContext(false, $"server={SecretConfig.ExternalDbAdress};user={SecretConfig.ExternalDbUser};password={SecretConfig.ExternalDbPassword};database=gameon_v2");
+                    windowInstance.Shared.appDbContext = new AppDbContext(false, $"server={SecretConfig.ExternalDbAdress};user={SecretConfig.ExternalDbUser};password={SecretConfig.ExternalDbPassword};database={SecretConfig.ExternalDbName}");
 
                     if (!windowInstance.Shared.appDbContext.IsInited()) {
                         InitDatabaseValues();
@@ -273,7 +283,7 @@ namespace GameOnSystem.Pages {
             await Task.Run(() => {
                 // Init the windowInstance.appDbContext with local db file
                 try {
-                    windowInstance.Shared.appDbContext = new AppDbContext(true, "Data Source=gameon_v2.db");
+                    windowInstance.Shared.appDbContext = new AppDbContext(true, $"Data Source={SecretConfig.LocalDbFile}");
 
                     if (!windowInstance.Shared.appDbContext.IsInited()) {
                         InitDatabaseValues();

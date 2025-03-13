@@ -32,7 +32,8 @@ namespace GameOnSystem.Pages.Parts {
                     UseShellExecute = true // default browser
                 };
                 Process.Start(processInfo);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 ;
             }
         }
@@ -72,43 +73,54 @@ namespace GameOnSystem.Pages.Parts {
             GroupMembers.Text = GroupMembers.Text.TrimEnd(',', ' ');
 
             // Add the categories and their grades as
-            bool gradeShowsAppUser = (bool)windowInstance.Shared.appDbContext.GetFlagWdef("ff_grade_shows_username", false);
+            bool gradeShowsAppUser = (bool)windowInstance.Shared.appDbContext.GetFlagWdef("ff_grade_shows_username", true);
+            bool gradeCommentAfterDeadline = (bool)windowInstance.Shared.appDbContext.GetFlagWdef("ff_grade_comment_after_deadline", false);
             /*
              * <ScrollViewer:Vertical x:Name="GradingSpace" Grid.Column="2">
              *     <StackPanel x:Name="GroupGradesList">
              *         <Border>
-             *             <StackPanel:Vertical>
-             *                 <TextBlock>{category}</TextBlock>
-             *                 <ScrollViewer>
+             *             <ScrollViewer>
+             *                 <StackPanel:Vertical>
+             *                     <TextBlock>{category}</TextBlock>
              *                     <StackPanel:Vertical>
              *                         <Border>
-             *                             <Grid:Horizontal (rec-is-2px-wide)>
+             *                             <DockPanel (rec-is-2px-wide)>
              *                                 <TextBlock>{grade_appuser_name}</TextBlock>
-             *                                 <Rectangle></Rectangle>
+             *                                 <Rectangle Width=2/>
              *                                 <TextBlock>{grade_formatted_value}</TextBlock>
-             *                                 <Rectangle></Rectangle>
+             *                                 <Rectangle Width=2/>
              *                                 <TextBlock>{grade_comment}</TextBlock>
-             *                             </Grid>
+             *                             </DockPanel>
              *                         </Border>
              *                     </StackPanel>
-             *                 </ScrollViewer>
-             *             </Border>
-             *         </StackPanel>
+             *                 </StackPanel>
+             *             </ScrollViewer>
+             *         </Border>
              *     </StackPanel>
              * </ScrollViewer>
              * <ContentControl x:Name="GroupTotalGradeSpace" Grid.Row="1">
              *     <Border>
-             *         <DockPanel:Horizontal>
-             *             <TextBlock>Total: </TextBlock>
-             *             <TextBlock>{total_average_for_group}</TextBlock>
-             *             <TextBlock> (average)</TextBlock>
-             *         </DockPanel>
+             *         <StackPanel:Vertical>
+             *             <DockPanel:Horizontal>
+             *                 <TextBlock>Total: </TextBlock>
+             *                 <TextBlock>{total_average_for_group}</TextBlock>
+             *                 <TextBlock> (average)</TextBlock>
+             *             </DockPanel>
+             *         </StackPanel>
              *     </Border>
              * </ContentControl>
              */
 
             List<DbTableModel_Grade> grades = group.GetGrades(windowInstance.Shared.appDbContext);
             DbTableModel_Edition edition = group.GetEdition(windowInstance.Shared.appDbContext);
+
+            bool isDeadlineAvaliable = true;
+            // If the edition has a deadline and the deadline has passed set to false
+            if (edition.GradingDeadline != null) {
+                if (DateTime.Now > edition.GradingDeadline) {
+                    isDeadlineAvaliable = false;
+                }
+            }
 
             if (grades.Count == 0) {
                 TextBlock noGradesText = new TextBlock {
@@ -127,7 +139,7 @@ namespace GameOnSystem.Pages.Parts {
                 // Iterate al grades if a grade is found under a category in focusCategories remove it from the list
                 foreach (DbTableModel_Grade grade in grades) {
                     DbTableModel_Category category = grade.GetCategory(windowInstance.Shared.appDbContext);
-                    if (ungradedFocusCategories.Contains(category)) {
+                    if (ungradedFocusCategories.Contains(category) && grade.GetAppUser(windowInstance.Shared.appDbContext).ID == windowInstance.Shared.user.ID) {
                         ungradedFocusCategories.Remove(category);
                     }
                 }
@@ -160,74 +172,101 @@ namespace GameOnSystem.Pages.Parts {
                     }
                     gradeBordersPerCategory[category].Add(border);
 
-                    // Create the grid for the grade entry
-                    Grid grid = new Grid { };
+                    // Create the dockpanel for the entry
+                    DockPanel entryDockPanel = new DockPanel();
 
-                    // Make the grid have Auto 10 Auto Auto 10 Auto
-                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(10, GridUnitType.Pixel) });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(10, GridUnitType.Pixel) });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+                    // If isDeadlineAvaliable is false show an error text unless ff_grade_comment_after_deadline is enabled
+                    if (isDeadlineAvaliable == false && !gradeCommentAfterDeadline) {
+                        TextBlock deadlineText = new TextBlock {
+                            Text = "Grading deadline has passed!",
+                            FontSize = 15
+                        };
+                        deadlineText.Style = (Style)FindResource("GrayedOutTextBlock");
+                        entryDockPanel.Children.Add(deadlineText);
 
-                    // Add the save button
-                    Button gradeSaveButton = new Button {
-                        Content = "Save",
-                        FontSize = 15
-                    };
-                    Grid.SetColumn(gradeSaveButton, 0);
-                    grid.Children.Add(gradeSaveButton);
+                    // Else show the input fields
+                    } else {
+                        // Add the save button
+                        Button gradeSaveButton = new Button();
+                        // Set content to textblock containg "Save"
+                        TextBlock gradeSaveButtonText = new TextBlock {
+                            Text = "Save",
+                            FontSize = 15
+                        };
+                        gradeSaveButtonText.Style = (Style)FindResource("StdTextBlock");
+                        gradeSaveButton.Content = gradeSaveButtonText;
+                        gradeSaveButton.IsEnabled = false;
+                        entryDockPanel.Children.Add(gradeSaveButton);
 
-                    // Add the divider rectangle #343434
-                    Rectangle divider1 = new Rectangle {
-                        Fill = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
-                        Width = 2
-                    };
-                    Grid.SetColumn(divider1, 1);
-                    grid.Children.Add(divider1);
+                        // Add the divider rectangle #343434
+                        Rectangle divider1 = new Rectangle {
+                            Fill = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
+                            Width = 2,
+                            Height = 20,
+                            Margin = new Thickness(5, 0, 5, 0)
+                        };
+                        entryDockPanel.Children.Add(divider1);
 
-                    // Add the grade value textbox/textblock
-                    TextBox grade_value = new TextBox {
-                        Text = "",
-                        FontSize = 15,
-                        MinWidth = 20
-                    };
-                    // If the grade type is "Abbriv IG-MVG" it must be wider
-                    if (edition.GradeType == 5) {
-                        grade_value.MinWidth = 40;
+                        // Add the grade value textbox/textblock
+                        TextBox grade_value = new TextBox {
+                            Text = "",
+                            FontSize = 15,
+                            MinWidth = 20
+                        };
+                        // If the grade type is "Abbriv IG-MVG" it must be wider
+                        if (edition.GradeType == 5) {
+                            grade_value.MinWidth = 40;
+                        }
+                        // If ff_grade_comment_after_deadline is enabled disable the input field
+                        if (gradeCommentAfterDeadline) {
+                            grade_value.IsEnabled = false;
+                        }
+                        entryDockPanel.Children.Add(grade_value);
+
+                        // Add the grade type textblock
+                        TextBlock grade_type = new TextBlock {
+                            Text = $" ({DbTableHelper.GetGradeTypeName(edition.GradeType)})",
+                            FontSize = 15
+                        };
+                        grade_type.Style = (Style)FindResource("GrayedOutTextBlock");
+                        entryDockPanel.Children.Add(grade_type);
+
+                        // Add the divider rectangle #343434
+                        Rectangle divider2 = new Rectangle {
+                            Fill = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
+                            Width = 2,
+                            Height = 20,
+                            Margin = new Thickness(5, 0, 5, 0)
+                        };
+                        entryDockPanel.Children.Add(divider2);
+
+                        // Add the grade comment textblock
+                        TextBox grade_comment = new TextBox {
+                            Text = "",
+                            FontSize = 15,
+                            MinWidth = 300
+                        };
+                        entryDockPanel.Children.Add(grade_comment);
+
+                        // Link the save button
+                        int? gradeUserCat = windowInstance.Shared.user.GetUserCatForFocusCategory(windowInstance.Shared.appDbContext, category.ID);
+                        if (gradeUserCat != null) { // Null if for some reason the user does not have a usercat for the category
+                            gradeSaveButton.IsEnabled = true;
+                            gradeSaveButton.Tag = new UITools_GroupGradeSaveButtonTag {
+                                buttonText = gradeSaveButtonText,
+                                groupID = group.ID,
+                                userCatID = (int)gradeUserCat,
+                                edition = edition,
+                                numValueIsEnabled = !gradeCommentAfterDeadline,
+                                valueBox = grade_value,
+                                commentBox = grade_comment
+                            };
+                            gradeSaveButton.Click += GradeSave_Click;
+                        }
                     }
-                    Grid.SetColumn(grade_value, 2);
-                    grid.Children.Add(grade_value);
 
-                    // Add the grade type textblock
-                    TextBlock grade_type = new TextBlock {
-                        Text = $" ({DbTableHelper.GetGradeTypeName(edition.GradeType)})",
-                        FontSize = 15
-                    };
-                    grade_type.Style = (Style)FindResource("GrayedOutTextBlock");
-                    Grid.SetColumn(grade_type, 3);
-                    grid.Children.Add(grade_type);
-
-                    // Add the divider rectangle #343434
-                    Rectangle divider2 = new Rectangle {
-                        Fill = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
-                        Width = 2
-                    };
-                    Grid.SetColumn(divider2, 4);
-                    grid.Children.Add(divider2);
-
-                    // Add the grade comment textblock
-                    TextBox grade_comment = new TextBox {
-                        Text = "",
-                        FontSize = 15,
-                        MinWidth = 300
-                    };
-                    Grid.SetColumn(grade_comment, 5);
-                    grid.Children.Add(grade_comment);
-
-                    // Add the grid to the border
-                    border.Child = grid;
+                    // Add the entryDockPanel to the border
+                    border.Child = entryDockPanel;
 
                     // Add the border to the stackpanel
                     stackpanel.Children.Add(border);
@@ -273,25 +312,8 @@ namespace GameOnSystem.Pages.Parts {
                     }
                     gradeBordersPerCategory[category].Add(border);
 
-                    // Create the grid for the grade entry
-                    Grid grid = new Grid {};
-
-                    // Setup entry based on gradeShowsAppUser
-                    if (gradeShowsAppUser) {
-                        // Make the grid have Auto Auto 10 Auto 10 Auto
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(10, GridUnitType.Pixel) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(10, GridUnitType.Pixel) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                    } else {
-                        // Make the grid have Auto Auto 10 Auto
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(10, GridUnitType.Pixel) });
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                    }
+                    // Create the dockpanel for the grade entry
+                    DockPanel entryDockPanel = new DockPanel();
 
                     // Add the grade_appuser_name textblock if enabled
                     if (gradeShowsAppUser) {
@@ -300,61 +322,64 @@ namespace GameOnSystem.Pages.Parts {
                             FontSize = 15,
                             Padding = new Thickness(3, 0, 3, 0)
                         };
-                        Grid.SetColumn(grade_appuser_name, 0);
-                        grid.Children.Add(grade_appuser_name);
+                        entryDockPanel.Children.Add(grade_appuser_name);
 
                         // Add the divider rectangle #343434
                         Rectangle divider = new Rectangle {
                             Fill = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
-                            Width = 2
+                            Width = 2,
+                            Height = 20,
+                            Margin = new Thickness(5, 0, 5, 0)
                         };
-                        Grid.SetColumn(divider, 1);
-                        grid.Children.Add(divider);
+                        entryDockPanel.Children.Add(divider);
                     }
 
-                    // Add the grade value textbox/textblock
-                    TextBlock grade_value = new TextBlock {
-                        Text = grade.GetGradeAsString(),
-                        FontSize = 15
-                    };
-                    if (isUsersGrade) {
-                        grade_value.FontWeight = FontWeights.Bold;
-                        grade_value.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    }
-                    Grid.SetColumn(grade_value, gradeShowsAppUser ? 2 : 0);
-                    grid.Children.Add(grade_value);
+                    // Hide -1 grades
+                    if (grade.NumValue != -1) {
+                        // Add the grade value textbox/textblock
+                        TextBlock grade_value = new TextBlock {
+                            Text = grade.GetGradeAsString(),
+                            FontSize = 15
+                        };
+                        if (isUsersGrade) {
+                            grade_value.FontWeight = FontWeights.Bold;
+                            grade_value.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                        }
+                        entryDockPanel.Children.Add(grade_value);
 
-                    // Add the grade type textblock
-                    TextBlock grade_type = new TextBlock {
-                        Text = $" ({grade.GetGradeTypeName()})",
-                        FontSize = 15
-                    };
-                    grade_type.Style = (Style)FindResource("GrayedOutTextBlock");
-                    Grid.SetColumn(grade_type, gradeShowsAppUser ? 3 : 1);
-                    grid.Children.Add(grade_type);
+                        // Add the grade type textblock
+                        TextBlock grade_type = new TextBlock {
+                            Text = $" ({grade.GetGradeTypeName()})",
+                            FontSize = 15
+                        };
+                        grade_type.Style = (Style)FindResource("GrayedOutTextBlock");
+                        entryDockPanel.Children.Add(grade_type);
+                    }
 
                     // Add the grade comment textblock if the comment is not empty
                     if (!string.IsNullOrEmpty(grade.Comment)) {
 
                         // Add the divider rectangle #343434
-                        Rectangle divider2 = new Rectangle {
-                            Fill = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
-                            Width = 2
-                        };
-                        Grid.SetColumn(divider2, gradeShowsAppUser ? 4 : 2);
-                        grid.Children.Add(divider2);
+                        if (grade.NumValue != -1) {
+                            Rectangle divider2 = new Rectangle {
+                                Fill = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
+                                Width = 2,
+                                Height = 20,
+                                Margin = new Thickness(5, 0, 5, 0)
+                            };
+                            entryDockPanel.Children.Add(divider2);
+                        }
 
                         // Add the grade comment textblock
                         TextBlock grade_comment = new TextBlock {
-                            Text = grade.Comment,
+                            Text = '"'+grade.Comment+'"',
                             FontSize = 15
                         };
-                        Grid.SetColumn(grade_comment, gradeShowsAppUser ? 5 : 3);
-                        grid.Children.Add(grade_comment);
+                        entryDockPanel.Children.Add(grade_comment);
                     }
 
-                    // Add the grid to the border
-                    border.Child = grid;
+                    // Add the entryDockPanel to the border
+                    border.Child = entryDockPanel;
 
                     // Add the border to the stackpanel
                     stackpanel.Children.Add(border);
@@ -363,6 +388,7 @@ namespace GameOnSystem.Pages.Parts {
                 // For each category set the border thickness to 0 on the last element
                 foreach (var category in gradeBordersPerCategory) {
                     category.Value.Last().BorderThickness = new Thickness(0, 0, 0, 0);
+                    category.Value.Last().Margin = new Thickness(0, 0, 0, 5);
                 }
 
                 // Calculate the total average and display that inside GroupTotalGradeSpace
@@ -373,8 +399,13 @@ namespace GameOnSystem.Pages.Parts {
                     BorderThickness = new Thickness(1, 1, 1, 1),
                     BorderBrush = new SolidColorBrush(Color.FromRgb(52, 52, 52))
                 };
+                // Create the stackpanel
+                StackPanel totalStackPanel = new StackPanel {
+                    Orientation = Orientation.Vertical
+                };
                 // Create the dockpanel
                 DockPanel dockPanel = new DockPanel();
+                totalStackPanel.Children.Add(dockPanel);
                 // Create the title TextBlock
                 TextBlock title = new TextBlock {
                     Text = "Total Average: ",
@@ -394,7 +425,26 @@ namespace GameOnSystem.Pages.Parts {
                 };
                 average.Style = (Style)FindResource("GrayedOutTextBlock");
                 dockPanel.Children.Add(average);
-                totalBorder.Child = dockPanel;
+                totalBorder.Child = totalStackPanel;
+
+                // If there is a grading deadline add it or "has passed" into the stackPanel
+                if (edition.GradingDeadline != null) {
+                    if (DateTime.Now > edition.GradingDeadline) {
+                        TextBlock deadlineText = new TextBlock {
+                            Text = $"Grading deadline has passed!",
+                            FontSize = 15
+                        };
+                        deadlineText.Style = (Style)FindResource("RedNoticeText");
+                        totalStackPanel.Children.Add(deadlineText);
+                    } else {
+                        TextBlock deadlineText = new TextBlock {
+                            Text = $"Grading deadline: {edition.GradingDeadline.Value.ToString("yyyy-MM-dd HH:mm")}",
+                            FontSize = 15
+                        };
+                        deadlineText.Style = (Style)FindResource("GradeDeadlineText");
+                        totalStackPanel.Children.Add(deadlineText);
+                    }
+                }
 
                 // Set the border as the content of GroupTotalGradeSpace
                 GroupTotalGradeSpace.Content = totalBorder;
@@ -420,7 +470,7 @@ namespace GameOnSystem.Pages.Parts {
             // Open the group.GameUrl in the default browser
             if (!string.IsNullOrEmpty(group.GameUrl)) {
                 // if PlayButtonPath is hovered open the url
-                if (PlayButtonPath.IsMouseOver || PlayButtonInnerPath.IsMouseOver) {
+                if (PlayButtonPath.IsMouseOver || PlayButtonInnerPath.IsMouseOver || PlayButton.IsKeyboardFocused) {
                     OpenUrl(group.GameUrl);
                 }
             }
@@ -435,7 +485,8 @@ namespace GameOnSystem.Pages.Parts {
                 double fontSize = GroupTitle.FontSize * (availableWidth / currentWidth);
                 try {
                     GroupTitle.FontSize = fontSize;
-                } catch {
+                }
+                catch {
                     ;
                 }
             }
@@ -455,6 +506,64 @@ namespace GameOnSystem.Pages.Parts {
                     ;
                 }
             }
+        }
+
+        // When grade save button is pressed
+        private void GradeSave_Click(object sender, RoutedEventArgs e) {
+            Button senderButton = (Button)sender;
+            UITools_GroupGradeSaveButtonTag tag = (UITools_GroupGradeSaveButtonTag)senderButton.Tag;
+
+            TextBlock gradeSaveButtonText = tag.buttonText;
+            int groupID = tag.groupID;
+            int userCatID = tag.userCatID;
+            DbTableModel_Edition edition = tag.edition;
+            bool numValueIsEnabled = tag.numValueIsEnabled;
+            string gradeValue = tag.valueBox.Text;
+            string gradeComment = tag.commentBox.Text;
+
+            int gradeIntValue = -1;
+
+            // If the numeral value is enabled parse it (also empty check)
+            if (numValueIsEnabled) {
+                // Check if the gradeValue is empty
+                if (string.IsNullOrEmpty(gradeValue)) {
+                    gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    return;
+                }
+
+                gradeIntValue = DbTableHelper.GetGradeFromString(edition.GradeType, gradeValue, -1, edition.GradeMin, edition.GradeMax);
+                // If the gradeIntValue is -1, the gradeValue was not able to be parsed
+                if (gradeIntValue == -1) {
+                    gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    return;
+                }
+
+                // Validate the gradeValue
+                if(!DbTableHelper.IsValidForType(edition.GradeType, gradeIntValue, edition.GradeMin, edition.GradeMax)) {
+                    gradeSaveButtonText.Style = (Style)FindResource("RedNoticeText");
+                    return;
+                }
+            }
+
+            // If comment is empty set to empty string to ensure comapt
+            if (string.IsNullOrEmpty(gradeComment)) {
+                gradeComment = "";
+            }
+
+            windowInstance.Shared.appDbContext.AddGrade(
+                gradeIntValue,
+                gradeComment,
+                groupID,
+                userCatID,
+                edition.GradeType
+            );
+
+            // Disable button and inputs and set button foreground to green
+            senderButton.Content = "✓";
+            gradeSaveButtonText.Style = (Style)FindResource("GreenNoticeText");
+            senderButton.IsEnabled = false;
+            tag.valueBox.IsEnabled = false;
+            tag.commentBox.IsEnabled = false;
         }
     }
 }

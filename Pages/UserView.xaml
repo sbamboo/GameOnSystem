@@ -16,15 +16,15 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="EditionTitle" Text="Loading..." FontSize="30" Grid.Column="0" Margin="10,0,0,0"/>
 
             <DockPanel Grid.Column="2" HorizontalAlignment="Center">
-                <Button x:Name="AdminViewBtn" Height="27" FontSize="18" Margin="10,0,10,0" Visibility="Hidden" Click="AdminViewBtnClick">
+                <Button x:Name="AdminViewBtn" Height="27" FontSize="18" Margin="10,0,10,0" Visibility="Collapsed" Click="AdminViewBtnClick">
                     <Button.Content>
-                        <TextBlock Text="AdminView" Margin="5,0,5,0"/>
+                        <TextBlock Text="Show AdminView" Margin="5,0,5,0"/>
                     </Button.Content>
                 </Button>
                 <Button Height="27" FontSize="18" Margin="10,0,10,0" Click="LogoutBtnClick">

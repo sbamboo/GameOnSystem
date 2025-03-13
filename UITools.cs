@@ -37,12 +37,14 @@ namespace GameOnSystem {
     public class UITools_GroupGradeCategory {
         private DbTableModel_Category category;
         private Border border;
+        private ScrollViewer scrollViewer;
         private StackPanel outerStackPanel;
         private TextBlock categoryTitle;
         private ScrollViewer innerScrollViewer;
         private StackPanel innerStackPanel;
 
         public Border Border { get { return this.border; } }
+        public ScrollViewer ScrollViewer { get { return this.scrollViewer; } }
         public StackPanel OuterStackPanel { get { return this.outerStackPanel; } }
         public TextBlock CategoryTitle { get { return this.categoryTitle; } }
         public ScrollViewer InnerScrollViewer { get { return this.innerScrollViewer; } }
@@ -55,20 +57,31 @@ namespace GameOnSystem {
             // Create the border
             this.border = new Border {
                 BorderThickness = new System.Windows.Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(52, 52, 52))
+                BorderBrush = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
+                Margin = new System.Windows.Thickness(0, 0, 0, 15),
+                Padding = new System.Windows.Thickness(2),
+                // Background #2C2C2C
+                Background = new SolidColorBrush(Color.FromRgb(44, 44, 44))
             };
+
+            // Create the scrollviewer (horizontal)
+            this.scrollViewer = new ScrollViewer {
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Auto
+            };
+            this.border.Child = this.scrollViewer;
 
             // Create the outer stackpanel
             this.outerStackPanel = new StackPanel {
                 Orientation = Orientation.Vertical
             };
-            this.border.Child = this.outerStackPanel;
+            this.scrollViewer.Content = this.outerStackPanel;
 
             // Create the category textblock
             this.categoryTitle = new TextBlock {
                 Text = category.Name,
                 FontSize = 16
             };
+            this.categoryTitle.Style = (System.Windows.Style)System.Windows.Application.Current.FindResource("GradeCategoryTitle");
             this.outerStackPanel.Children.Add(this.categoryTitle);
 
             // Create the inner scrollviewer
@@ -83,7 +96,15 @@ namespace GameOnSystem {
             };
             this.innerScrollViewer.Content = this.innerStackPanel;
         }
-
     }
 
+    internal struct UITools_GroupGradeSaveButtonTag {
+        public TextBlock buttonText;
+        public int groupID;
+        public int userCatID;
+        public DbTableModel_Edition edition;
+        public bool numValueIsEnabled;
+        public TextBox valueBox;
+        public TextBox commentBox;
+    }
 }

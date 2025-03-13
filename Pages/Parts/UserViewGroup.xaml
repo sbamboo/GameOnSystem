@@ -60,7 +60,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
-                    <ScrollViewer x:Name="GradingSpace" Grid.Row="0">
+                    <ScrollViewer x:Name="GradingSpace" Grid.Row="0" VerticalScrollBarVisibility="Auto">
                         <StackPanel x:Name="GroupGradesList"></StackPanel>
                     </ScrollViewer>
                     <ContentControl x:Name="GroupTotalGradeSpace" Grid.Row="1"/>

@@ -74,6 +74,22 @@
         <Setter Property="Foreground" Value="#d17171"/>
     </Style>
 
+    <Style x:Key="RedNoticeText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#d17171"/>
+    </Style>
+
+    <Style x:Key="GreenNoticeText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#71d171"/>
+    </Style>
+
+    <Style x:Key="GradeCategoryTitle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#9fa1ed"/>
+    </Style>
+
+    <Style x:Key="GradeDeadlineText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#b4c2ae"/>
+    </Style>
+
     <!-- Scroll Bars (https://stackoverflow.com/questions/37095415/wpf-scrollbar-styles) -->
     <SolidColorBrush x:Key="EslScrollbarThumb" Color="#8b8b8b" />
 
