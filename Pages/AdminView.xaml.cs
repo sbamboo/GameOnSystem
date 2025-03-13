@@ -22,6 +22,7 @@ namespace GameOnSystem.Pages {
 
         private readonly MainWindow windowInstance;
         private readonly UserControl? sendingView;
+        internal UITools_GroupContentHolder uITools_AdminContentHolder;
 
         public AdminView(MainWindow WindowInstance, UserControl? SendingView = null) {
             this.windowInstance = WindowInstance;
@@ -37,6 +38,9 @@ namespace GameOnSystem.Pages {
                 }
             }
 
+            // Setup UI tools
+            uITools_AdminContentHolder = new UITools_GroupContentHolder(AdminContentHolderWrapper, NoSelectedContentText, AdminContentHolder);
+
             // Update texts
             if (windowInstance.Shared.appDbContext.IsInited()) {
                 AdminSideBarTitle.Text = "Select Table";
@@ -47,48 +51,68 @@ namespace GameOnSystem.Pages {
             }
 
             // Add table buttons to the sidebar
-            AdminSidebar.Children.Add(new Button() {
-                Content = "Options", Tag=windowInstance.Shared.appDbContext.Options,
+            Button optionsButton = new Button() {
+                Content = "Options", Tag="Options",
                 Margin = new Thickness(0, 5, 0, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
-            });
-            AdminSidebar.Children.Add(new Button() {
-                Content = "AppUsers", Tag=windowInstance.Shared.appDbContext.AppUsers,
+            };
+            optionsButton.Click += TabelSelectClick;
+            AdminSidebar.Children.Add(optionsButton);
+
+            Button appUsersButton = new Button() {
+                Content = "AppUsers", Tag="AppAsers",
                 Margin = new Thickness(0, 5, 0, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
-            });
-            AdminSidebar.Children.Add(new Button() {
-                Content = "Editions", Tag = windowInstance.Shared.appDbContext.Editions,
+            };
+            appUsersButton.Click += TabelSelectClick;
+            AdminSidebar.Children.Add(appUsersButton);
+
+            Button editionsButton = new Button() {
+                Content = "Editions", Tag = "Editions",
                 Margin = new Thickness(0, 5, 0, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
-            });
-            AdminSidebar.Children.Add(new Button() {
-                Content = "Categories", Tag = windowInstance.Shared.appDbContext.Categories,
+            };
+            editionsButton.Click += TabelSelectClick;
+            AdminSidebar.Children.Add(editionsButton);
+
+            Button categoriesButton = new Button() {
+                Content = "Categories", Tag = "Categories",
                 Margin = new Thickness(0, 5, 0, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
-            });
-            AdminSidebar.Children.Add(new Button() {
-                Content = "Groups", Tag = windowInstance.Shared.appDbContext.Groups,
+            };
+            categoriesButton.Click += TabelSelectClick;
+            AdminSidebar.Children.Add(categoriesButton);
+
+            Button groupsButton = new Button() {
+                Content = "Groups", Tag = "Groups",
                 Margin = new Thickness(0, 5, 0, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
-            });
-            AdminSidebar.Children.Add(new Button() {
-                Content = "Participants", Tag = windowInstance.Shared.appDbContext.Participants,
+            };
+            groupsButton.Click += TabelSelectClick;
+            AdminSidebar.Children.Add(groupsButton);
+
+            Button participantsButton = new Button() {
+                Content = "Participants", Tag = "Participants",
                 Margin = new Thickness(0, 5, 0, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
-            });
-            AdminSidebar.Children.Add(new Button() {
-                Content = "Grades", Tag = windowInstance.Shared.appDbContext.Grades,
+            };
+            participantsButton.Click += TabelSelectClick;
+            AdminSidebar.Children.Add(participantsButton);
+
+            Button gradesButton = new Button() {
+                Content = "Grades", Tag = "Grades",
                 Margin = new Thickness(0, 5, 0, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
-            });
+            };
+            gradesButton.Click += TabelSelectClick;
+            AdminSidebar.Children.Add(gradesButton);
         }
 
         private void UserViewButtonClick(object sender, RoutedEventArgs e) {
@@ -97,6 +121,14 @@ namespace GameOnSystem.Pages {
             } else {
                 windowInstance.NavigateTo(new UserView(windowInstance, this));
             }
+        }
+
+        private void TabelSelectClick(object sender, RoutedEventArgs e) {
+
+            // Set main content to 
+            uITools_AdminContentHolder.SetContent(
+                new Pages.Parts.AdminViewTable(windowInstance, this, (Button)sender)
+            );
         }
     }
 }
