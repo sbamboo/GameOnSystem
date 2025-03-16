@@ -53,7 +53,7 @@ namespace GameOnSystem.Pages {
             // Add table buttons to the sidebar
             Button optionsButton = new Button() {
                 Content = "Options", Tag="Options",
-                Margin = new Thickness(0, 5, 0, 0),
+                Margin = new Thickness(10, 5, 10, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
             };
@@ -62,7 +62,7 @@ namespace GameOnSystem.Pages {
 
             Button appUsersButton = new Button() {
                 Content = "AppUsers", Tag="AppAsers",
-                Margin = new Thickness(0, 5, 0, 0),
+                Margin = new Thickness(10, 5, 10, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
             };
@@ -71,7 +71,7 @@ namespace GameOnSystem.Pages {
 
             Button editionsButton = new Button() {
                 Content = "Editions", Tag = "Editions",
-                Margin = new Thickness(0, 5, 0, 0),
+                Margin = new Thickness(10, 5, 10, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
             };
@@ -80,7 +80,7 @@ namespace GameOnSystem.Pages {
 
             Button categoriesButton = new Button() {
                 Content = "Categories", Tag = "Categories",
-                Margin = new Thickness(0, 5, 0, 0),
+                Margin = new Thickness(10, 5, 10, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
             };
@@ -89,7 +89,7 @@ namespace GameOnSystem.Pages {
 
             Button groupsButton = new Button() {
                 Content = "Groups", Tag = "Groups",
-                Margin = new Thickness(0, 5, 0, 0),
+                Margin = new Thickness(10, 5, 10, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
             };
@@ -98,7 +98,7 @@ namespace GameOnSystem.Pages {
 
             Button participantsButton = new Button() {
                 Content = "Participants", Tag = "Participants",
-                Margin = new Thickness(0, 5, 0, 0),
+                Margin = new Thickness(10, 5, 10, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
             };
@@ -107,7 +107,7 @@ namespace GameOnSystem.Pages {
 
             Button gradesButton = new Button() {
                 Content = "Grades", Tag = "Grades",
-                Margin = new Thickness(0, 5, 0, 0),
+                Margin = new Thickness(10, 5, 10, 0),
                 Padding = new Thickness(0, 5, 0, 5),
                 FontSize = 16
             };
@@ -125,10 +125,23 @@ namespace GameOnSystem.Pages {
 
         private void TabelSelectClick(object sender, RoutedEventArgs e) {
 
-            // Set main content to 
-            uITools_AdminContentHolder.SetContent(
-                new Pages.Parts.AdminViewTable(windowInstance, this, (Button)sender)
-            );
+            UserControl? newView = null;
+
+            if (sender is Button) {
+                switch (((Button)sender).Tag) {
+                    case "Options":
+                        newView = new Pages.Parts.Admin.Options(windowInstance, this);
+                        break;
+
+                    case "Participants":
+                        newView = new Pages.Parts.Admin.Participants(windowInstance, this);
+                        break;
+                }
+            }
+
+            if (newView != null) {
+                uITools_AdminContentHolder.SetContent(newView);
+            }
         }
     }
 }

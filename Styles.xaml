@@ -53,6 +53,12 @@
         </Style.Triggers>
     </Style>
 
+    <!-- ListBox background same as button -->
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="#323232"/>
+        <Setter Property="BorderBrush" Value="#2D2D2D"/>
+    </Style>
+
     <!-- Named Styles -->
     <Style x:Key="StdTextBlock" TargetType="TextBlock">
         <Setter Property="Foreground" Value="#D3D3D3"/>

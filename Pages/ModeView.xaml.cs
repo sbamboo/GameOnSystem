@@ -78,18 +78,20 @@ namespace GameOnSystem.Pages {
 
             // Participants
 
-            DbTableModel_Participant participant1 = windowInstance.Shared.appDbContext.AddParticipant("Participant 1");
-            DbTableModel_Participant participant2 = windowInstance.Shared.appDbContext.AddParticipant("Participant 2");
-            DbTableModel_Participant participant3 = windowInstance.Shared.appDbContext.AddParticipant("Participant 3");
-            DbTableModel_Participant participant4 = windowInstance.Shared.appDbContext.AddParticipant("Participant 4");
-            DbTableModel_Participant participant5 = windowInstance.Shared.appDbContext.AddParticipant("Participant 5");
-            DbTableModel_Participant participant6 = windowInstance.Shared.appDbContext.AddParticipant("Participant 6");
-            DbTableModel_Participant participant7 = windowInstance.Shared.appDbContext.AddParticipant("Participant 7");
-            DbTableModel_Participant participant8 = windowInstance.Shared.appDbContext.AddParticipant("Participant 8");
-            DbTableModel_Participant participant9 = windowInstance.Shared.appDbContext.AddParticipant("Participant 9");
+            DbTableModel_Participant participant1 = windowInstance.Shared.appDbContext.AddParticipant("Participant 1", go2024.ID);
+            DbTableModel_Participant participant2 = windowInstance.Shared.appDbContext.AddParticipant("Participant 2", go2024.ID);
+            DbTableModel_Participant participant3 = windowInstance.Shared.appDbContext.AddParticipant("Participant 3", go2024.ID);
+            DbTableModel_Participant participant4 = windowInstance.Shared.appDbContext.AddParticipant("Participant 4", go2024.ID);
+            DbTableModel_Participant participant5 = windowInstance.Shared.appDbContext.AddParticipant("Participant 5", go2024.ID);
+            DbTableModel_Participant participant6 = windowInstance.Shared.appDbContext.AddParticipant("Participant 6", go2024.ID);
+            DbTableModel_Participant participant7 = windowInstance.Shared.appDbContext.AddParticipant("Participant 7", go2024.ID);
+            DbTableModel_Participant participant8 = windowInstance.Shared.appDbContext.AddParticipant("Participant 8", go2024.ID);
+            DbTableModel_Participant participant9 = windowInstance.Shared.appDbContext.AddParticipant("Participant 9", go2024.ID);
             DbTableModel_Participant participant10 = windowInstance.Shared.appDbContext.AddParticipant("Participant 10");
             DbTableModel_Participant participant11 = windowInstance.Shared.appDbContext.AddParticipant("Participant 11"); // Unasigned in example
             DbTableModel_Participant participant12 = windowInstance.Shared.appDbContext.AddParticipant("Participant 12"); // Unasigned in example
+            DbTableModel_Participant participant13 = windowInstance.Shared.appDbContext.AddParticipant("Participant 13", go2023.ID); // Unasigned in example
+            DbTableModel_Participant participant14 = windowInstance.Shared.appDbContext.AddParticipant("Participant 14", go2023.ID); // Unasigned in example
 
             // Groups
 
@@ -210,6 +212,11 @@ namespace GameOnSystem.Pages {
                 user2_theme_keeping.ID,
                 go2024.GradeType
             );
+
+            // Feature Flags
+            windowInstance.Shared.appDbContext.SetFlag("ff_grade_shows_username", true);
+            windowInstance.Shared.appDbContext.SetFlag("ff_hover_for_playbutton", false);
+            windowInstance.Shared.appDbContext.SetFlag("ff_grade_comment_after_deadline", false);
         }
 
         private async void ModeSelectExternal(object sender, RoutedEventArgs e) {
