@@ -19,7 +19,7 @@
         <Rectangle Fill="#282828" Grid.Column="1" Margin="1,0,3,0" Width="2"/>
 
         <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
-            <WrapPanel x:Name="EditionsWrapper"></WrapPanel>
+            <WrapPanel x:Name="GroupsWrapper"></WrapPanel>
         </ScrollViewer>
 
         <!-- The "Popup" Overlay -->

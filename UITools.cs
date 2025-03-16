@@ -125,13 +125,13 @@ namespace GameOnSystem {
         public int ID { get; set; }
         public string Name { get; set; }
 
-        public UITools_ParticipantsManager_Edition? Parent;
+        public UITools_ParticipantsManager_Group? Parent;
 
         private RoutedEventHandler editButtonHandler;
 
         private TextBlock? textBlock;
 
-        public UITools_ParticipantsManager_Participant(int ID, string Name, UITools_ParticipantsManager_Edition Parent, RoutedEventHandler EditButtonHandler) {
+        public UITools_ParticipantsManager_Participant(int ID, string Name, UITools_ParticipantsManager_Group Parent, RoutedEventHandler EditButtonHandler) {
             this.ID = ID;
             this.Name = Name;
             this.Parent = Parent;
@@ -228,7 +228,7 @@ namespace GameOnSystem {
         }
     }
 
-    public class UITools_ParticipantsManager_Edition {
+    public class UITools_ParticipantsManager_Group {
         public int ID { get; set; }
         public string Name { get; set; }
         public List<UITools_ParticipantsManager_Participant> Participants { get; set; }
@@ -237,7 +237,7 @@ namespace GameOnSystem {
 
         public ListBox? ListBox;
 
-        public UITools_ParticipantsManager_Edition(int ID, string Name, List<UITools_ParticipantsManager_Participant> Participants) {
+        public UITools_ParticipantsManager_Group(int ID, string Name, List<UITools_ParticipantsManager_Participant> Participants) {
             this.ID = ID;
             this.Name = Name;
             this.Participants = Participants;
@@ -316,8 +316,8 @@ namespace GameOnSystem {
             };
 
             // Assign the drop and drag-over event handlers
-            listBox.Drop += StackPanel_Drop;
-            listBox.DragEnter += StackPanel_DragEnter;
+            listBox.Drop += ListBox_Drop;
+            listBox.DragEnter += ListBox_DragEnter;
 
             // Link the StackPanel to the ScrollViewer
             scrollViewer.Content = listBox;
@@ -329,14 +329,14 @@ namespace GameOnSystem {
             return border;
         }
 
-        private void StackPanel_Drop(object sender, DragEventArgs e) {
+        private void ListBox_Drop(object sender, DragEventArgs e) {
             var participant = e.Data.GetData(typeof(UITools_ParticipantsManager_Participant)) as UITools_ParticipantsManager_Participant;
             if (participant != null) {
                 this.AddParticipant(participant);
             }
         }
 
-        private void StackPanel_DragEnter(object sender, DragEventArgs e) {
+        private void ListBox_DragEnter(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(typeof(UITools_ParticipantsManager_Participant))) {
                 e.Effects = DragDropEffects.Move;
             } else {
