@@ -61,11 +61,10 @@ namespace GameOnSystem {
             // Create the border
             this.border = new Border {
                 BorderThickness = new System.Windows.Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(52, 52, 52)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(52, 52, 52)), //#343434
                 Margin = new System.Windows.Thickness(0, 0, 0, 15),
                 Padding = new System.Windows.Thickness(2),
-                // Background #2C2C2C
-                Background = new SolidColorBrush(Color.FromRgb(44, 44, 44))
+                Background = new SolidColorBrush(Color.FromRgb(44, 44, 44)) //#2C2C2C
             };
 
             // Create the scrollviewer (horizontal)
@@ -149,9 +148,9 @@ namespace GameOnSystem {
             Border border = new Border() {
                 Margin = new Thickness(0, 0, 0, 5),
                 Padding = new Thickness(0,5,0,5),
-                Background = new SolidColorBrush(Color.FromRgb(44, 44, 44)),
+                Background = new SolidColorBrush(Color.FromRgb(44, 44, 44)), //#2C2C2C
                 BorderThickness = new Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)), //#323232
                 Width = 176,
                 Height = 32
             };
@@ -172,8 +171,8 @@ namespace GameOnSystem {
 
             // Border > DockPanel > Button
             Button editButton = new Button() {
-                Background = new SolidColorBrush(Color.FromRgb(53, 53, 53)),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(60, 60, 60)),
+                Background = new SolidColorBrush(Color.FromRgb(53, 53, 53)), //#353535
+                BorderBrush = new SolidColorBrush(Color.FromRgb(60, 60, 60)), //#3C3C3C
                 IsEnabled = true,
                 Focusable = true,
                 IsHitTestVisible = true,
@@ -204,7 +203,7 @@ namespace GameOnSystem {
 
             Path path = new Path() {
                 Data = Geometry.Parse("M12 20H21M3.00003 20H4.67457C5.16376 20 5.40835 20 5.63852 19.9447C5.84259 19.8957 6.03768 19.8149 6.21663 19.7053C6.41846 19.5816 6.59141 19.4086 6.93732 19.0627L19.5001 6.49998C20.3285 5.67156 20.3285 4.32841 19.5001 3.49998C18.6716 2.67156 17.3285 2.67156 16.5001 3.49998L3.93729 16.0627C3.59139 16.4086 3.41843 16.5816 3.29475 16.7834C3.18509 16.9624 3.10428 17.1574 3.05529 17.3615C3.00003 17.5917 3.00003 17.8363 3.00003 18.3255V20Z"),
-                Stroke = new SolidColorBrush(Color.FromRgb(211, 211, 211)),
+                Stroke = new SolidColorBrush(Color.FromRgb(211, 211, 211)), //#D3D3D3
                 StrokeThickness = 2
             };
             innerCanvas.Children.Add(path);
@@ -267,10 +266,10 @@ namespace GameOnSystem {
 
             Border border = new Border() {
                 BorderThickness = new Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(50, 50, 50)), //#323232
                 Margin = new Thickness(10),
                 Padding = new Thickness(2),
-                Background = new SolidColorBrush(Color.FromRgb(44, 44, 44))
+                Background = new SolidColorBrush(Color.FromRgb(44, 44, 44)) //#2C2C2C
             };
 
             Grid grid = new Grid() {
@@ -296,7 +295,7 @@ namespace GameOnSystem {
             Grid.SetRow(textBlock, 0);
 
             Rectangle rectangle = new Rectangle() {
-                Fill = new SolidColorBrush(Color.FromRgb(40, 40, 40))
+                Fill = new SolidColorBrush(Color.FromRgb(40, 40, 40)) //#282828
             };
             grid.Children.Add(rectangle);
             Grid.SetRow(rectangle, 1);

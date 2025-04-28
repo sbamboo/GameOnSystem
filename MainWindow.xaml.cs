@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using GameOnSystem.Pages;
 
 namespace GameOnSystem {
 
@@ -32,19 +33,23 @@ namespace GameOnSystem {
 
             InitializeComponent();
 
-            MainContent.Content = new Pages.ModeSelect(this);
+            NavigateTo(new ModeView(this, null));
         }
 
         public void NavigateTo(UserControl view) {
 
-            if (Shared.appDbIsUsingSqlite) {
-                Title = Shared.coreTitle + " | Local database";
+            if (view.GetType().Name == "ModeView") {
+                Title = Shared.coreTitle;
             } else {
-                Title = Shared.coreTitle + $" | Connected to {SecretConfig.ExternalDbAdress}";
+                if (Shared.appDbIsUsingSqlite) {
+                    Title = Shared.coreTitle + " | Local database";
+                } else {
+                    Title = Shared.coreTitle + $" | Connected to {SecretConfig.ExternalDbAdress}";
+                }
             }
             
             switch (view.GetType().Name) {
-                case "ModeSelect":
+                case "ModeView":
                     Title += " | Mode select";
                     break;
                 case "LoginView":

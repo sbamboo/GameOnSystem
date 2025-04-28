@@ -59,7 +59,7 @@ namespace GameOnSystem.Pages {
                 EditionTitle.Text += $" (Theme: {activeEdition.Theme})";
             }
 
-            List<DbTableModel_Group> groups = windowInstance.Shared.appDbContext.GetGroups();
+            List<DbTableModel_Group> groups = activeEdition.GetGroups(windowInstance.Shared.appDbContext);
             if (groups.Count == 0) {
                 GroupSidebarText.Text = "No groups found.";
                 NoSelectedGroupText.Text = $"No groups found for {activeEdition.Name}, please come back later.";

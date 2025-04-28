@@ -41,7 +41,7 @@ namespace GameOnSystem.Pages {
         private void LoginViewDisconnect(object sender, RoutedEventArgs e) {
             windowInstance.Shared.appDbContext.Dispose();
 
-            windowInstance.NavigateTo(new ModeSelect(windowInstance, this));
+            windowInstance.NavigateTo(new ModeView(windowInstance, this));
         }
 
         private void LoginViewLogin(object sender, RoutedEventArgs e) {

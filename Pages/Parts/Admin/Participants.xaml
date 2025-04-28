@@ -31,11 +31,11 @@
                     <TextBox x:Name="ParticipantPopupInput" Width="190" Margin="10" FontSize="15.5" HorizontalAlignment="Center"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-                        <Button x:Name="ParticipantPopupCancelBtn" Width="90" Margin="5" Height="22.5" HorizontalContentAlignment="Center" Click="ParticipantPopupCancel">
-                            <TextBlock Text="Cancel" FontSize="14.5"/>
-                        </Button>
                         <Button x:Name="ParticipantPopupConfirmBtn" Width="90" Margin="5" Height="22.5" HorizontalContentAlignment="Center" Click="ParticipantPopupConfirm">
                             <TextBlock Text="Save" FontSize="14.5"/>
+                        </Button>
+                        <Button x:Name="ParticipantPopupCancelBtn" Width="90" Margin="5" Height="22.5" HorizontalContentAlignment="Center" Click="ParticipantPopupCancel">
+                            <TextBlock Text="Cancel" FontSize="14.5"/>
                         </Button>
                     </StackPanel>
                 </StackPanel>

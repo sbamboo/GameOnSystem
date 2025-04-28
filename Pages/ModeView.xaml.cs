@@ -16,18 +16,38 @@ using System.Windows.Shapes;
 
 namespace GameOnSystem.Pages {
     /// <summary>
-    /// Interaction logic for ModeSelect.xaml
+    /// Interaction logic for ModeView.xaml
     /// </summary>
-    public partial class ModeSelect : UserControl {
+    public partial class ModeView : UserControl {
 
         private readonly MainWindow windowInstance;
         private readonly UserControl? sendingView;
 
-        public ModeSelect(MainWindow WindowInstance, UserControl? SendingView = null) {
+        public ModeView(MainWindow WindowInstance, UserControl? SendingView = null) {
             this.windowInstance = WindowInstance;
             this.sendingView = SendingView;
 
             InitializeComponent();
+
+            // Check config for which mode buttons to show
+            if (SecretConfig.ShowLocalDbBtn == true) {
+                // Set Margin="0,0,50,0" to ModeViewLocalBtn
+                if (SecretConfig.ShowExternalDbBtn == true) {
+                    ModeViewLocalBtn.Margin = new Thickness(0, 0, 50, 0);
+                }
+                ModeViewLocalBtn.Visibility = Visibility.Visible;
+            } else {
+                ModeViewLocalBtn.Visibility = Visibility.Collapsed;
+            }
+            if (SecretConfig.ShowExternalDbBtn == true) {
+                // Set Margin="0,0,50,0" to ModeViewExternalBtn
+                if (SecretConfig.ShowLocalDbBtn == true) {
+                    ModeViewExternalBtn.Margin = new Thickness(50, 0, 0, 0);
+                }
+                ModeViewExternalBtn.Visibility = Visibility.Visible;
+            } else {
+                ModeViewExternalBtn.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void InitDatabaseValues() {
@@ -219,9 +239,9 @@ namespace GameOnSystem.Pages {
             windowInstance.Shared.appDbContext.SetFlag("ff_grade_comment_after_deadline", false);
         }
 
-        private async void ModeSelectExternal(object sender, RoutedEventArgs e) {
-            ModeSelectInfoText.Style = (Style)FindResource("StdTextBlock");
-            ModeSelectInfoText.Text = $"Connecting to {SecretConfig.ExternalDbAdress}...";
+        private async void ModeViewExternal(object sender, RoutedEventArgs e) {
+            ModeViewInfoText.Style = (Style)FindResource("StdTextBlock");
+            ModeViewInfoText.Text = $"Connecting to {SecretConfig.ExternalDbAdress}...";
 
             // Make text change before continuing
             //Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.ContextIdle, null);
@@ -232,14 +252,14 @@ namespace GameOnSystem.Pages {
                 windowInstance.appDbContext = new AppDbContext(false, $"server={SecretConfig.ExternalDbAdress};user={SecretConfig.ExternalDbUser};password={SecretConfig.ExternalDbPassword};database=gameon_v2");
             }
             catch (Exception ex) {
-                ModeSelectInfoText.Style = (Style)FindResource("ErrorTextBlock");
-                ModeSelectInfoText.Text = ex.Message;
+                ModeViewInfoText.Style = (Style)FindResource("ErrorTextBlock");
+                ModeViewInfoText.Text = ex.Message;
             }
             */
 
             // Disable buttons
-            ModeSelectLocalBtn.IsEnabled = false;
-            ModeSelectExternalBtn.IsEnabled = false;
+            ModeViewLocalBtn.IsEnabled = false;
+            ModeViewExternalBtn.IsEnabled = false;
 
             await Task.Run(() => {
                 try {
@@ -255,8 +275,8 @@ namespace GameOnSystem.Pages {
                 catch (Exception ex) {
                     windowInstance.Shared.appDbIsInited = false;
                     Dispatcher.Invoke(() => {
-                        ModeSelectInfoText.Style = (Style)FindResource("ErrorTextBlock");
-                        ModeSelectInfoText.Text = ex.Message;
+                        ModeViewInfoText.Style = (Style)FindResource("ErrorTextBlock");
+                        ModeViewInfoText.Text = ex.Message;
                     });
                 }
             });
@@ -264,8 +284,8 @@ namespace GameOnSystem.Pages {
             if (windowInstance.Shared.appDbIsInited) {
                 
                 Dispatcher.Invoke(() => {
-                    ModeSelectInfoText.Style = (Style)FindResource("StdTextBlock");
-                    ModeSelectInfoText.Text = $"Connected to external database at {SecretConfig.ExternalDbAdress}!";
+                    ModeViewInfoText.Style = (Style)FindResource("StdTextBlock");
+                    ModeViewInfoText.Text = $"Connected to external database at {SecretConfig.ExternalDbAdress}!";
                 });
 
                 windowInstance.Shared.appDbIsUsingSqlite = false;
@@ -274,18 +294,18 @@ namespace GameOnSystem.Pages {
 
             // Enable buttons
             Dispatcher.Invoke(() => {
-                ModeSelectLocalBtn.IsEnabled = true;
-                ModeSelectExternalBtn.IsEnabled = true;
+                ModeViewLocalBtn.IsEnabled = true;
+                ModeViewExternalBtn.IsEnabled = true;
             });
         }
 
-        private async void ModeSelectLocal(object sender, RoutedEventArgs e) {
-            ModeSelectInfoText.Style = (Style)FindResource("StdTextBlock");
-            ModeSelectInfoText.Text = $"Loading local database...";
+        private async void ModeViewLocal(object sender, RoutedEventArgs e) {
+            ModeViewInfoText.Style = (Style)FindResource("StdTextBlock");
+            ModeViewInfoText.Text = $"Loading local database...";
 
             // Disable buttons
-            ModeSelectLocalBtn.IsEnabled = false;
-            ModeSelectExternalBtn.IsEnabled = false;
+            ModeViewLocalBtn.IsEnabled = false;
+            ModeViewExternalBtn.IsEnabled = false;
 
             await Task.Run(() => {
                 // Init the windowInstance.appDbContext with local db file
@@ -302,8 +322,8 @@ namespace GameOnSystem.Pages {
                 catch (Exception ex) {
                     windowInstance.Shared.appDbIsInited = false;
                     Dispatcher.Invoke(() => {
-                        ModeSelectInfoText.Style = (Style)FindResource("ErrorTextBlock");
-                        ModeSelectInfoText.Text = ex.Message + " (If backed-up, remove gameon_v2.db and try again)";
+                        ModeViewInfoText.Style = (Style)FindResource("ErrorTextBlock");
+                        ModeViewInfoText.Text = ex.Message + " (If backed-up, remove gameon_v2.db and try again)";
                     });
                 }
             });
@@ -311,8 +331,8 @@ namespace GameOnSystem.Pages {
             if (windowInstance.Shared.appDbIsInited) {
                 
                 Dispatcher.Invoke(() => {
-                    ModeSelectInfoText.Style = (Style)FindResource("StdTextBlock");
-                    ModeSelectInfoText.Text = "Connected to local database!";
+                    ModeViewInfoText.Style = (Style)FindResource("StdTextBlock");
+                    ModeViewInfoText.Text = "Connected to local database!";
                 });
 
                 windowInstance.Shared.appDbIsUsingSqlite = true;
@@ -322,8 +342,8 @@ namespace GameOnSystem.Pages {
 
             // Enable buttons
             Dispatcher.Invoke(() => {
-                ModeSelectLocalBtn.IsEnabled = true;
-                ModeSelectExternalBtn.IsEnabled = true;
+                ModeViewLocalBtn.IsEnabled = true;
+                ModeViewExternalBtn.IsEnabled = true;
             });
         }
     }

@@ -249,6 +249,11 @@ namespace GameOnSystem {
             return Editions.FirstOrDefault(e => e.IsActive == true);
         }
 
+        // Alternative function to `GetActiveEdition` that returns a list of all active editions
+        public List<DbTableModel_Edition> GetActiveEditions() {
+            return Editions.Where(e => e.IsActive == true).ToList();
+        }
+
         #endregion
 
         #region AppUsers

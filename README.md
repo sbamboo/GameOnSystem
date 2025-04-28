@@ -26,6 +26,12 @@ User:     root
 Password: ""
 ```
 
+Default shown mode buttons (pre-compiled in SecretConfig.cs):
+```
+Local: true
+External: true
+```
+
 DB Feature flags (Fields under options table): *al options are string in db, type is written here as \<dbtype\>:\<parsedtype\>*
 
 Type        | Values         | Field                           | Fallback (InCode) |Description
@@ -34,3 +40,6 @@ string:bool | "true"/"false" | ff_grade_shows_username         | true           
 string:bool | "true"/"false" | ff_hover_for_playbutton         | false             | If true the playbutton is only visible when hovering the gamebanner
 string:bool | "true"/"false" | ff_grade_comment_after_deadline | false             | If true users can still comment on grades after the deadline
 
+
+Additional notes:
+- The app supports only one active edition at a time, if multiple the one defined first in the database will be shown.
