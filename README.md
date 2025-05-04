@@ -41,5 +41,14 @@ string:bool | "true"/"false" | ff_hover_for_playbutton         | false          
 string:bool | "true"/"false" | ff_grade_comment_after_deadline | false             | If true users can still comment on grades after the deadline
 
 
+DB Options (Fields under options table):
+
+`group_grade_calculation` (`opt_group_grade_calculation`) decides how the average grade for a group is calculated, between the following modes:
+  - `average`                       : Takes the average of all grades and gives with decimals *(double)*
+  - `avgs-of-category-avgs`         : Takes the average of all grades in each category then averages the averages and gives with decimals *(double)*
+  - `average-rounded`               : Same as `average` but rounds result to nearest integer *(int, Math.round)*
+  - `avgs-of-category-avgs-rounded` : 
+
+
 Additional notes:
 - The app supports only one active edition at a time, if multiple the one defined first in the database will be shown.

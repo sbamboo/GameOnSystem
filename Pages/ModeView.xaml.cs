@@ -71,7 +71,7 @@ namespace GameOnSystem.Pages {
                 6,                        // GradeMax
                 1,                        // GradeType
                 true,                     // IsActive
-                new DateTime(2026, 3, 12) // GradingDeadline
+                new DateTime(2025, 3, 12) // GradingDeadline
             );
 
             // Categories
@@ -237,6 +237,9 @@ namespace GameOnSystem.Pages {
             windowInstance.Shared.appDbContext.SetFlag("ff_grade_shows_username", true);
             windowInstance.Shared.appDbContext.SetFlag("ff_hover_for_playbutton", false);
             windowInstance.Shared.appDbContext.SetFlag("ff_grade_comment_after_deadline", false);
+
+            // Options
+            windowInstance.Shared.appDbContext.SetOption("opt_group_grade_calculation", "avgs-of-category-avgs-rounded");
         }
 
         private async void ModeViewExternal(object sender, RoutedEventArgs e) {

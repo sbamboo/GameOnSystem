@@ -125,6 +125,15 @@ namespace GameOnSystem {
             }
         }
 
+        public static string GetDoubleGradeAsString(int gradeType, double numValue) {
+            if (gradeType >= 2 && gradeType <= 5) {
+                return GetGradeAsString(gradeType, (int)Math.Round(numValue));
+            } else {
+                return numValue.ToString("F2");
+            }
+        }
+
+
         public static int GetGradeFromString(int gradeType, string gradeString, int? defaultValue = null, int? intMin = null, int? intMax = null) {
 
             int _defaultValue = 0;
@@ -259,6 +268,38 @@ namespace GameOnSystem {
 
         public List<DbTableModel_Participant> GetParticipants(AppDbContext appDbContext) {
             return appDbContext.Participants.Where(p => p.EditionID == this.ID).ToList();
+        }
+
+        public DbTableModel_Group? GetGroupWithMaxGrade(AppDbContext appDbContext) {
+            // For each group in the edition, get the average grade using GetAverageGrade_Prefered and then return the group that has the highest average grade
+            List<DbTableModel_Group> groups = GetGroups(appDbContext);
+            if (groups.Count == 0) { return null; }
+
+            // Create a mapping of groupID to (average grade int, average grade double)
+            Dictionary<int, (int? intVal, double? doubleVal)> groupGrades = new Dictionary<int, (int? intVal, double? doubleVal)>();
+            foreach (DbTableModel_Group group in groups) {
+                (int? intVal, double? doubleVal) = group.GetAverageGrade_Prefered(appDbContext);
+                groupGrades.Add(group.ID, (intVal, doubleVal));
+            }
+
+            // Find the group with the highest average grade
+            DbTableModel_Group? topGroup = null;
+            double? highestGrade = null;
+
+            foreach (var entry in groupGrades) {
+                double? gradeToCompare = entry.Value.doubleVal ?? entry.Value.intVal; // if int we cast to double for simplicity
+
+                // Skip if both values are null
+                if (gradeToCompare == null) continue;
+
+                // If we haven't found a highest grade or this one is higher, update
+                if (!highestGrade.HasValue || gradeToCompare > highestGrade) {
+                    highestGrade = gradeToCompare;
+                    topGroup = groups.FirstOrDefault(g => g.ID == entry.Key);
+                }
+            }
+
+            return topGroup;
         }
     }
 
@@ -509,6 +550,15 @@ namespace GameOnSystem {
         public Dictionary<DbTableModel_Category, int> GetAverageGradesPerCategory(AppDbContext appDbContext) {
             return GetGrades(appDbContext).Where(g => g.NumValue != -1).GroupBy(g => g.GetCategory(appDbContext)).ToDictionary(g => g.Key, g => g.Sum(g => g.NumValue) / g.Count());
         }
+        public Dictionary<DbTableModel_Category, double> GetAverageGradesPerCategoryAsDouble(AppDbContext appDbContext) {
+            return GetGrades(appDbContext)
+                .Where(g => g.NumValue != -1)
+                .GroupBy(g => g.GetCategory(appDbContext))
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Average(g => (double)g.NumValue) // use Average for better precision
+                );
+        }
 
         // Gets the average grade using the average-per-category values
         public double GetAverageGrade(AppDbContext appDbContext) {
@@ -520,6 +570,13 @@ namespace GameOnSystem {
             }
             return sum / averageGrades.Count;
         }
+
+        public double GetAverageGradeUsingDoubles(AppDbContext appDbContext) {
+            var averageGrades = GetAverageGradesPerCategoryAsDouble(appDbContext);
+            if (averageGrades.Count == 0) { return 0; }
+            return averageGrades.Values.Average();
+        }
+
 
         // Gets the average grade using the raw grade values
         public double GetAverageGrade_NoCatAverages(AppDbContext appDbContext) {
@@ -538,6 +595,30 @@ namespace GameOnSystem {
 
         public int GetAverageGradeRounded_NoCatAverages(AppDbContext appDbContext) {
             return (int)Math.Round(GetAverageGrade_NoCatAverages(appDbContext));
+        }
+
+        public (int? intVal, double? doubleVal) GetAverageGrade_Prefered(AppDbContext appDbContext) {
+            // Reads the config for the prefered way of retrieving the average grade
+            // Read 'opt_group_grade_calculation' option from db, which is either "average", "avgs-of-category-avgs", "average-rounded", "avgs-of-category-avgs-rounded"
+            string? opt = appDbContext.Options.FirstOrDefault(o => o.Field == "opt_group_grade_calculation")?.Value;
+            if (opt == null) {
+                // fallback to "avgs-of-category-avgs-rounded"
+                opt = "avgs-of-category-avgs-rounded";
+            }
+
+            // Case the opt
+            switch (opt) {
+                case "average":
+                    return (null, GetAverageGrade_NoCatAverages(appDbContext));
+                case "avgs-of-category-avgs":
+                    return (null, GetAverageGradeUsingDoubles(appDbContext));
+                case "average-rounded":
+                    return (GetAverageGradeRounded_NoCatAverages(appDbContext), null);
+                case "avgs-of-category-avgs-rounded":
+                    return (GetAverageGradeRounded(appDbContext), null);
+                default:
+                    return (GetAverageGradeRounded(appDbContext), null);
+            }
         }
 
         public DbTableModel_Edition GetEdition(AppDbContext appDbContext) {

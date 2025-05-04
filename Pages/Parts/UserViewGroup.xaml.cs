@@ -397,63 +397,7 @@ namespace GameOnSystem.Pages.Parts {
                     category.Value.Last().Margin = new Thickness(0, 0, 0, 5);
                 }
 
-                // Calculate the total average and display that inside GroupTotalGradeSpace
-                int totalAverage = group.GetAverageGradeRounded(windowInstance.Shared.appDbContext);
-
-                // Create the border
-                Border totalBorder = new Border {
-                    BorderThickness = new Thickness(1, 1, 1, 1),
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(52, 52, 52))
-                };
-                // Create the stackpanel
-                StackPanel totalStackPanel = new StackPanel {
-                    Orientation = Orientation.Vertical
-                };
-                // Create the dockpanel
-                DockPanel dockPanel = new DockPanel();
-                totalStackPanel.Children.Add(dockPanel);
-                // Create the title TextBlock
-                TextBlock title = new TextBlock {
-                    Text = "Total Average: ",
-                    FontSize = 18
-                };
-                dockPanel.Children.Add(title);
-                // Create the value TextBlock
-                TextBlock value = new TextBlock {
-                    Text = DbTableHelper.GetGradeAsString(edition.GradeType, totalAverage),
-                    FontSize = 18
-                };
-                dockPanel.Children.Add(value);
-                // Create the average TextBlock
-                TextBlock average = new TextBlock {
-                    Text = $" ({DbTableHelper.GetGradeTypeName(edition.GradeType)})",
-                    FontSize = 18
-                };
-                average.Style = (Style)FindResource("GrayedOutTextBlock");
-                dockPanel.Children.Add(average);
-                totalBorder.Child = totalStackPanel;
-
-                // If there is a grading deadline add it or "has passed" into the stackPanel
-                if (edition.GradingDeadline != null) {
-                    if (DateTime.Now > edition.GradingDeadline) {
-                        TextBlock deadlineText = new TextBlock {
-                            Text = $"Grading deadline has passed!",
-                            FontSize = 15
-                        };
-                        deadlineText.Style = (Style)FindResource("RedNoticeText");
-                        totalStackPanel.Children.Add(deadlineText);
-                    } else {
-                        TextBlock deadlineText = new TextBlock {
-                            Text = $"Grading deadline: {edition.GradingDeadline.Value.ToString("yyyy-MM-dd HH:mm")}",
-                            FontSize = 15
-                        };
-                        deadlineText.Style = (Style)FindResource("GradeDeadlineText");
-                        totalStackPanel.Children.Add(deadlineText);
-                    }
-                }
-
-                // Set the border as the content of GroupTotalGradeSpace
-                GroupTotalGradeSpace.Content = totalBorder;
+                UpdateAverageValue();
             }
         }
 
@@ -588,6 +532,77 @@ namespace GameOnSystem.Pages.Parts {
                 tag.valueBox.IsEnabled = false;
                 tag.commentBox.IsEnabled = false;
             });
+            Dispatcher.Invoke(() => {
+                UpdateAverageValue();
+            });
         }
+        private void UpdateAverageValue() {
+            List<DbTableModel_Grade> grades = group.GetGrades(windowInstance.Shared.appDbContext);
+            DbTableModel_Edition edition = group.GetEdition(windowInstance.Shared.appDbContext);
+
+            if (grades.Count == 0) {
+                TextBlock noGradesText = new TextBlock {
+                    Text = "No grades found for this group.",
+                    FontSize = 18
+                };
+                GroupTotalGradeSpace.Content = noGradesText;
+                return;
+            }
+
+            (int? totalAverage_int, double? totalAverage_double) = group.GetAverageGrade_Prefered(windowInstance.Shared.appDbContext);
+            string totalAverage = totalAverage_int != null
+                ? DbTableHelper.GetGradeAsString(edition.GradeType, (int)totalAverage_int)
+                : totalAverage_double != null
+                    ? DbTableHelper.GetDoubleGradeAsString(edition.GradeType, (double)totalAverage_double)
+                    : "?";
+
+            Border totalBorder = new Border {
+                BorderThickness = new Thickness(1, 1, 1, 1),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(52, 52, 52))
+            };
+
+            StackPanel totalStackPanel = new StackPanel {
+                Orientation = Orientation.Vertical
+            };
+
+            DockPanel dockPanel = new DockPanel();
+            totalStackPanel.Children.Add(dockPanel);
+
+            dockPanel.Children.Add(new TextBlock {
+                Text = "Total Average: ",
+                FontSize = 18
+            });
+
+            dockPanel.Children.Add(new TextBlock {
+                Text = totalAverage,
+                FontSize = 18
+            });
+
+            var averageText = new TextBlock {
+                Text = $" ({DbTableHelper.GetGradeTypeName(edition.GradeType)})",
+                FontSize = 18,
+                Style = (Style)FindResource("GrayedOutTextBlock")
+            };
+            dockPanel.Children.Add(averageText);
+
+            // Add grading deadline info
+            if (edition.GradingDeadline != null) {
+                TextBlock deadlineText = new TextBlock {
+                    Text = DateTime.Now > edition.GradingDeadline
+                        ? "Grading deadline has passed!"
+                        : $"Grading deadline: {edition.GradingDeadline.Value:yyyy-MM-dd HH:mm}",
+                    FontSize = 15,
+                    Style = (Style)FindResource(
+                        DateTime.Now > edition.GradingDeadline
+                            ? "RedNoticeText"
+                            : "GradeDeadlineText")
+                };
+                totalStackPanel.Children.Add(deadlineText);
+            }
+
+            totalBorder.Child = totalStackPanel;
+            GroupTotalGradeSpace.Content = totalBorder;
+        }
+
     }
 }
