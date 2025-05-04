@@ -53,6 +53,15 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="WinnerGroupButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="BorderBrush" Value="Gold"/>
+        <!--
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="ToolTip" Value="Top Rated Group"/>
+        -->
+    </Style>
+
     <!-- ListBox background same as button -->
     <Style TargetType="ListBox">
         <Setter Property="Background" Value="#323232"/>
@@ -66,6 +75,10 @@
     
     <Style x:Key="ErrorTextBlock" TargetType="TextBlock">
         <Setter Property="Foreground" Value="Red"/>
+    </Style>
+
+    <Style x:Key="GoldTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Gold"/>
     </Style>
 
     <Style x:Key="GrayedOutTextBlock" TargetType="TextBlock">
@@ -127,6 +140,24 @@
 
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="WinnerGroupText" TargetType="TextBlock">
+        <Setter Property="Background" Value="Gold"/>
+        <Setter Property="Foreground" Value="#3F3F3F"/>
+        <Setter Property="Padding" Value="6,2"/>
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="1" BlurRadius="2" Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <!-- Scroll Bars (https://stackoverflow.com/questions/37095415/wpf-scrollbar-styles) -->
     <SolidColorBrush x:Key="EslScrollbarThumb" Color="#8b8b8b" />

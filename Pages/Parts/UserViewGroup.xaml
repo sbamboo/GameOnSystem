@@ -50,6 +50,7 @@
                     <StackPanel Grid.Row="2">
                         <TextBlock Text="Group Members:" FontSize="16" Style="{StaticResource GrayedOutTextBlock}"></TextBlock>
                         <TextBlock x:Name="GroupMembers" Text="Loading..." FontSize="16" Style="{StaticResource GrayedOutTextBlock}" ></TextBlock>
+                        <TextBlock x:Name="WinnerGroupText" FontSize="16" Style="{StaticResource WinnerGroupText}" Visibility="Collapsed"></TextBlock>
                     </StackPanel>
                 </Grid>
 

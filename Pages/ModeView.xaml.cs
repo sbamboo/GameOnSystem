@@ -95,6 +95,7 @@ namespace GameOnSystem.Pages {
             DbTableModel_UserCat user2_codestrcdocs  = user2.AddFocusCategory(windowInstance.Shared.appDbContext, code_structure_and_docs.ID);
             DbTableModel_UserCat user2_playability   = user2.AddFocusCategory(windowInstance.Shared.appDbContext, playability.ID);
             DbTableModel_UserCat user2_theme_keeping = user2.AddFocusCategory(windowInstance.Shared.appDbContext, theme_keeping.ID);
+            //DbTableModel_UserCat user2_entertainment = user2.AddFocusCategory(windowInstance.Shared.appDbContext, entertainment.ID);
 
             // Participants
 
@@ -112,6 +113,8 @@ namespace GameOnSystem.Pages {
             DbTableModel_Participant participant12 = windowInstance.Shared.appDbContext.AddParticipant("Participant 12"); // Unasigned in example
             DbTableModel_Participant participant13 = windowInstance.Shared.appDbContext.AddParticipant("Participant 13", go2023.ID); // Unasigned in example
             DbTableModel_Participant participant14 = windowInstance.Shared.appDbContext.AddParticipant("Participant 14", go2023.ID); // Unasigned in example
+            DbTableModel_Participant participant15 = windowInstance.Shared.appDbContext.AddParticipant("Participant 15", go2023.ID);
+            DbTableModel_Participant participant16 = windowInstance.Shared.appDbContext.AddParticipant("Participant 16", go2023.ID);
 
             // Groups
 
@@ -189,6 +192,16 @@ namespace GameOnSystem.Pages {
             go2024_group8.AddParticipant(windowInstance.Shared.appDbContext, participant8.ID);
             go2024_group8.AddParticipant(windowInstance.Shared.appDbContext, participant10.ID);
 
+            DbTableModel_Group go2023_group1 = windowInstance.Shared.appDbContext.AddGroup(
+                "Grupp 1",
+                "??",
+                "https://go2024.ntigskovde.se/gr1/index.html",
+                go2023.ID,
+                "https://raw.githubusercontent.com/sbamboo/GameOnSystem/refs/heads/main/Assets/2024_group1.png"
+            );
+            go2023_group1.AddParticipant(windowInstance.Shared.appDbContext, participant15.ID);
+            go2023_group1.AddParticipant(windowInstance.Shared.appDbContext, participant16.ID);
+
             // Grades
             windowInstance.Shared.appDbContext.AddGrade(
                 1,
@@ -232,6 +245,16 @@ namespace GameOnSystem.Pages {
                 user2_theme_keeping.ID,
                 go2024.GradeType
             );
+
+            /*
+            windowInstance.Shared.appDbContext.AddGrade(
+                1,
+                "hello",
+                go2023_group1.ID,
+                user2_entertainment.ID,
+                go2023.GradeType
+            );
+            */
 
             // Feature Flags
             windowInstance.Shared.appDbContext.SetFlag("ff_grade_shows_username", true);

@@ -19,7 +19,10 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="EditionTitle" Text="Loading..." FontSize="30" Grid.Column="0" Margin="10,0,0,0"/>
+            <StackPanel Grid.Column="0" Margin="10,0,0,0" Orientation="Horizontal">
+                <TextBlock x:Name="EditionTitle" Text="Loading..." FontSize="30" Visibility="Collapsed"/>
+                <ComboBox x:Name="EditionSelector" FontSize="20" Width="400" Visibility="Collapsed" SelectionChanged="EditionSelector_SelectionChanged"/>
+            </StackPanel>
 
             <DockPanel Grid.Column="2" HorizontalAlignment="Center">
                 <Button x:Name="AdminViewBtn" Height="27" FontSize="18" Margin="10,0,10,0" Visibility="Collapsed" Click="AdminViewBtnClick">
