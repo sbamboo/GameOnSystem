@@ -138,6 +138,7 @@ namespace GameOnSystem.Pages {
 
                 if (isWinner) {
                     groupBtn.Style = (Style)FindResource("WinnerGroupButton");
+                    groupBtn.Content = new TextBlock { Text = group.Name, Style = (Style)FindResource("GoldTextBlock") };
                 }
 
                 groupBtn.Click += GroupButtonClick;
