@@ -29,6 +29,8 @@ namespace GameOnSystem.Pages {
 
             InitializeComponent();
 
+            ModeViewLocal(null, null); //MARK: REMOVE_ME
+
             // Check config for which mode buttons to show
             if (SecretConfig.ShowLocalDbBtn == true) {
                 // Set Margin="0,0,50,0" to ModeViewLocalBtn
@@ -47,6 +49,10 @@ namespace GameOnSystem.Pages {
                 ModeViewExternalBtn.Visibility = Visibility.Visible;
             } else {
                 ModeViewExternalBtn.Visibility = Visibility.Collapsed;
+            }
+
+            if (SecretConfig.ShowLocalDbBtn != true && SecretConfig.ShowExternalDbBtn != true) {
+                ModeViewTitle.Text = "This app version is missconfigured!";
             }
         }
 
@@ -71,7 +77,7 @@ namespace GameOnSystem.Pages {
                 6,                        // GradeMax
                 1,                        // GradeType
                 true,                     // IsActive
-                new DateTime(2025, 3, 12) // GradingDeadline
+                new DateTime(2026, 3, 12) // GradingDeadline
             );
 
             // Categories
@@ -108,11 +114,11 @@ namespace GameOnSystem.Pages {
             DbTableModel_Participant participant7 = windowInstance.Shared.appDbContext.AddParticipant("Participant 7", go2024.ID);
             DbTableModel_Participant participant8 = windowInstance.Shared.appDbContext.AddParticipant("Participant 8", go2024.ID);
             DbTableModel_Participant participant9 = windowInstance.Shared.appDbContext.AddParticipant("Participant 9", go2024.ID);
-            DbTableModel_Participant participant10 = windowInstance.Shared.appDbContext.AddParticipant("Participant 10");
+            DbTableModel_Participant participant10 = windowInstance.Shared.appDbContext.AddParticipant("Participant 10"); // Unasigned in example
             DbTableModel_Participant participant11 = windowInstance.Shared.appDbContext.AddParticipant("Participant 11"); // Unasigned in example
             DbTableModel_Participant participant12 = windowInstance.Shared.appDbContext.AddParticipant("Participant 12"); // Unasigned in example
-            DbTableModel_Participant participant13 = windowInstance.Shared.appDbContext.AddParticipant("Participant 13", go2023.ID); // Unasigned in example
-            DbTableModel_Participant participant14 = windowInstance.Shared.appDbContext.AddParticipant("Participant 14", go2023.ID); // Unasigned in example
+            DbTableModel_Participant participant13 = windowInstance.Shared.appDbContext.AddParticipant("Participant 13", go2023.ID);
+            DbTableModel_Participant participant14 = windowInstance.Shared.appDbContext.AddParticipant("Participant 14", go2023.ID);
             DbTableModel_Participant participant15 = windowInstance.Shared.appDbContext.AddParticipant("Participant 15", go2023.ID);
             DbTableModel_Participant participant16 = windowInstance.Shared.appDbContext.AddParticipant("Participant 16", go2023.ID);
 

@@ -236,10 +236,13 @@ namespace GameOnSystem {
 
         public ListBox? ListBox;
 
-        public UITools_ParticipantsManager_Group(int ID, string Name, List<UITools_ParticipantsManager_Participant> Participants) {
+        public bool AddAddButton;
+
+        public UITools_ParticipantsManager_Group(int ID, string Name, List<UITools_ParticipantsManager_Participant> Participants, bool AddAddButton = false) {
             this.ID = ID;
             this.Name = Name;
             this.Participants = Participants;
+            this.AddAddButton = AddAddButton;
             this.UIElement = null;
         }
 
@@ -251,6 +254,7 @@ namespace GameOnSystem {
              *             <RowDefinition Height="35"/>
              *             <RowDefinition Height="2"/>
              *             <RowDefinition Height="Auto"/>
+             *             <RowDefinition Height="35"/>
              *         </Grid.RowDefinitions>
              *    
              *         <TextBlock Grid.Row="0" Text="Unassigned Participants" FontSize="16" Margin="10,0,0,0" VerticalAlignment="Center"/>
@@ -260,6 +264,8 @@ namespace GameOnSystem {
              *         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
              *             <ListBox>   
              *         </ScrollViewer>
+             *         
+             *         <Button><TextBlock/></Button>
              *     </Grid>
              *</Border>
              */
@@ -285,6 +291,11 @@ namespace GameOnSystem {
             grid.RowDefinitions.Add(
                 new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) }
             );
+            if (this.AddAddButton) {
+                grid.RowDefinitions.Add(
+                    new RowDefinition() { Height = new GridLength(35) }
+                );
+            }
 
             TextBlock textBlock = new TextBlock() {
                 Text = this.Name,
@@ -305,6 +316,31 @@ namespace GameOnSystem {
             };
             grid.Children.Add(scrollViewer);
             Grid.SetRow(scrollViewer, 2);
+
+            if (this.AddAddButton)
+            {
+                TextBlock addParticipantButtonText = new TextBlock()
+                {
+                    Text = "Add Participant",
+                    FontSize = 16
+                };
+                Button addParticipantButton = new Button()
+                {
+                    Background = new SolidColorBrush(Color.FromRgb(53, 53, 53)), //#353535
+                    BorderBrush = new SolidColorBrush(Color.FromRgb(60, 60, 60)), //#3C3C3C
+                    IsEnabled = true,
+                    Focusable = true,
+                    IsHitTestVisible = true,
+                    Margin = new Thickness(0, 0, 0, 0)
+                };
+                addParticipantButton.Click += (object sender, RoutedEventArgs e) =>
+                {
+
+                };
+                addParticipantButton.Content = addParticipantButtonText;
+                grid.Children.Add(addParticipantButton);
+                Grid.SetRow(addParticipantButton, 3);
+            }
 
             border.Child = grid;
 

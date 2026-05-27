@@ -36,6 +36,10 @@ namespace GameOnSystem.Pages {
                 LoginViewEmailBox.Focus();
             };
 
+
+            LoginViewEmailBox.Text = "admin";        //MARK: REMOVE_ME
+            LoginViewPasswordBox.Password = "admin"; //MARK: REMOVE_ME
+
         }
 
         private void LoginViewDisconnect(object sender, RoutedEventArgs e) {

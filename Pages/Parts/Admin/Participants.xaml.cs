@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.VisualBasic;
+using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using Microsoft.VisualBasic;
+using System.Windows.Media;
 
 namespace GameOnSystem.Pages.Parts.Admin {
     public partial class Participants : UserControl {
@@ -24,12 +26,13 @@ namespace GameOnSystem.Pages.Parts.Admin {
             Dictionary<int, UITools_ParticipantsManager_Group> groupManagers = new Dictionary<int, UITools_ParticipantsManager_Group>();
 
             // Create a UITools_ParticipantsManager_Group in UnassignedParticipantsWrapper
-            UITools_ParticipantsManager_Group unassignedParticipantsManager = new UITools_ParticipantsManager_Group(0, "Unassigned participants", new List<UITools_ParticipantsManager_Participant>());
+            UITools_ParticipantsManager_Group unassignedParticipantsManager = new UITools_ParticipantsManager_Group(0, "Unassigned participants", new List<UITools_ParticipantsManager_Participant>(), true);
             groupManagers[0] = unassignedParticipantsManager;
             UnassignedParticipantsWrapper.Children.Add(unassignedParticipantsManager.GetElement());
 
+
             // Get all editions
-            List<DbTableModel_Group> groups = windowInstance.Shared.appDbContext.GetGroups();
+            List <DbTableModel_Group> groups = windowInstance.Shared.appDbContext.GetGroups();
 
             // Create UITools_ParticipantsManager_Group for each group inside the WrapPanel GroupsWrapper
             foreach (DbTableModel_Group group in groups) {
